@@ -17,8 +17,10 @@ async def main():
         )
         return
 
-    bearer_token = await twitter.retrieve_bearer_token(api_key, secret_key)
-    print(bearer_token)
+    client = await twitter.Client.from_api_key(api_key, secret_key, "dev")
+    query = twitter.Query(query_string="koronawirus", max_results=200)
+    async for tweet in client.query(query):
+        print(tweet)
 
 
 if __name__ == "__main__":

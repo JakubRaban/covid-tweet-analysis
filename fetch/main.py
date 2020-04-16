@@ -1,10 +1,20 @@
 import asyncio
 import os
+from collections import namedtuple
 
-from fetch import twitter
+from fetch import twitter, database
 
 TWITTER_API_KEY_ENVVAR = "TWITTER_API_KEY"
 TWITTER_API_SECRET_ENVVAR = "TWITTER_API_SECRET"
+
+
+async def fetch(
+    query: twitter.Query, twitter_credentials: twitter.Credentials, database
+):
+    client = await twitter.Client.from_api_key(twitter_credentials)
+
+    async for tweet in client.query(query):
+        database.upload_tweet(tweet)
 
 
 async def main():
@@ -17,10 +27,7 @@ async def main():
         )
         return
 
-    client = await twitter.Client.from_api_key(api_key, secret_key, "dev")
-    query = twitter.Query(query_string="koronawirus", max_results=200)
-    async for tweet in client.query(query):
-        print(tweet)
+    # TODO: nice fetcher
 
 
 if __name__ == "__main__":

@@ -1,3 +1,5 @@
+from collections import namedtuple
+
 import aiohttp
 import datetime
 
@@ -77,15 +79,20 @@ async def cursor(query, client):
                 query_dict["next"] = json_response["next"]
 
 
+Credentials = namedtuple("Credentials", ("api_key", "secret_key", "app_name"))
+
+
 class Client:
     def __init__(self, bearer_token: str, app_name: str):
         self._bearer_token = bearer_token
         self.app_name = app_name
 
     @classmethod
-    async def from_api_key(cls, api_key, api_secret_key, app_name):
-        bearer_token = await retrieve_bearer_token(api_key, api_secret_key)
-        return cls(bearer_token, app_name)
+    async def from_api_key(cls, credentials: Credentials):
+        bearer_token = await retrieve_bearer_token(
+            credentials.api_key, credentials.secret_key
+        )
+        return cls(bearer_token, credentials.app_name)
 
     def get_auth_headers(self):
         return {"Authorization": f"Bearer {self._bearer_token}"}

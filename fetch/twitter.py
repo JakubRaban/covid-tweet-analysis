@@ -61,14 +61,13 @@ TWEETS_PER_REQUEST = 100
 Credentials = namedtuple("Credentials", ("api_key", "secret_key", "app_name"))
 
 
-@abc.ABC
-class TweetSource:
+class TweetSource(abc.ABC):
     @abc.abstractmethod
-    async def count(self, query: Query) -> int:
+    async def count(self, query):
         pass
 
     @abc.abstractmethod
-    async def query(self, query: Query) -> AsyncIterator[dict]:
+    async def query(self, query):
         pass
 
 
@@ -78,7 +77,7 @@ class Client(TweetSource):
         self.app_name = app_name
 
     @classmethod
-    async def from_api_key(cls, credentials: Credentials) -> 'Client':
+    async def from_api_key(cls, credentials: Credentials) -> "Client":
         bearer_token = await retrieve_bearer_token(
             credentials.api_key, credentials.secret_key
         )
@@ -96,7 +95,7 @@ class Client(TweetSource):
             ) as result:
                 yield result
 
-    async def query(self, query: Query) -> AsyncIterator[dict]:
+    async def query(self, query: Query) -> AsyncIterator:
         query_dict = query.to_query_dict()
         query_dict["maxResults"] = TWEETS_PER_REQUEST
 
@@ -131,3 +130,12 @@ class Client(TweetSource):
 
             return json_response["totalCount"]
 
+
+class FakeClient(TweetSource):
+    async def count(self, query: Query) -> int:
+        return 1
+
+    async def query(self, query: Query) -> AsyncIterator:
+        yield {"__test": True, "id": 2137}
+        yield {"__test": True, "id": 1488}
+        yield {"__test": True, "id": 420}

@@ -8,6 +8,9 @@ verify_ssl = true
 [packages]
 tweepy = "*"
 aiohttp = "*"
+motor = "*"
+db = "*"
+click = "*"
 
 [requires]
 python_version = "3.8"

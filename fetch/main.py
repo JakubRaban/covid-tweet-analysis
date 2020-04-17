@@ -9,7 +9,7 @@ TWITTER_API_SECRET_ENVVAR = "TWITTER_API_SECRET"
 
 
 async def fetch(
-    query: twitter.Query, twitter_credentials: twitter.Credentials, database
+    query: twitter.Query, source: twitter.TweetSource, database
 ):
     client = await twitter.Client.from_api_key(twitter_credentials)
 

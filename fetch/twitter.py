@@ -114,7 +114,10 @@ class Client(TweetSource):
                     yield tweet
 
                 remaining_results -= TWEETS_PER_REQUEST
-                query_dict["next"] = json_response["next"]
+                if "next" in json_response:
+                    query_dict["next"] = json_response["next"]
+                else:
+                    break
 
     async def count(self, query: Query) -> int:
         query_dict = query.to_query_dict()

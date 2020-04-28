@@ -1,5 +1,6 @@
 import asyncio
 import os
+from datetime import datetime
 from collections import namedtuple
 
 import click
@@ -15,11 +16,11 @@ MONGODB_DBNAME_ENVVAR = "MONGDB_DBNAME"
 
 async def fetch(query, source, database, collection):
     async for tweet in source.query(query):
-        database.insert(tweet, collection)
+        await database.insert(tweet, collection)
 
 
 async def main(query, twitter_api, collection):
-    twitter_query = twitter.Query(query_string=query)
+    twitter_query = twitter.Query(query_string=query, to_date=datetime(2020, 4, 20), from_date=datetime(2020, 4, 16), max_results=10000)
 
     if twitter_api:
         credentials = twitter.Credentials(
@@ -58,11 +59,11 @@ async def main(query, twitter_api, collection):
 @click.option(
     "--mongo_collection",
     "-c",
-    default="tweets",
+    default="Influencerzy",
     help="Mongo collection to insert tweets to",
 )
-def fetch_command(query, twitter_api, collection):
-    asyncio.run(main(query, twitter_api, collection))
+def fetch_command(query, twitter_api, mongo_collection):
+    asyncio.run(main(query, twitter_api, mongo_collection))
 
 
 if __name__ == "__main__":

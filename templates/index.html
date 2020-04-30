@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dobry wieczór Państwu</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+</head>
+<body>
+
+<h1>Dzień dobry z tej strony Małgorzata Żabińska-Rakoczy</h1>
+<h2>Proszę państwa to jest wszystko źle</h2>
+<ul id="faults">
+    {% for fault in faults %}
+    <li>{{fault}}</li>
+    {% endfor %}
+</ul>
+
+</body>
+</html>

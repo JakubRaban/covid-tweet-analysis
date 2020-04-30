@@ -237,3 +237,6 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.gitignore.io/api/linux,python,pycharm,windows
+
+# (secret) password to the database
+db_password.txt

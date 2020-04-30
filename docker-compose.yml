@@ -1,4 +1,4 @@
-version: '3'
+version: '3.8'
 services:
   db:
     build: ./mongo
@@ -6,17 +6,26 @@ services:
     environment:
       MONGO_INITDB_DATABASE: tweets
       MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: rootpassword
+      MONGO_INITDB_ROOT_PASSWORD: /run/secrets/db_password
     ports:
       - 27017:27017
     volumes:
       - ./mongo/data:/data/db
+    secrets:
+      - db_password
   web:
     build: .
     ports:
       - 5000:5000
     command: pipenv run python -u main.py
+    environment:
+      FLASK_DEBUG: 1
+      PYTHONUNBUFFERED: 1
     depends_on:
       - db
     volumes:
       - .:/code
+
+secrets:
+  db_password:
+    file: db_password.txt

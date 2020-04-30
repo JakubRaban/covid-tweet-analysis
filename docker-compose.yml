@@ -1,0 +1,21 @@
+version: '3'
+services:
+  web:
+    build: .
+    ports:
+      - 5000:5000
+    command: pipenv run python -u main.py
+    depends_on:
+      - db
+    volumes:
+      - .:/code
+  db:
+    image: mongo:4.2.6
+    environment:
+      MONGO_INITDB_DATABASE: tweets
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: rootpassword
+    ports:
+      - 27017:27017
+    volumes:
+      - ./data:/data/db

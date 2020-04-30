@@ -1,7 +1,8 @@
 version: '3'
 services:
   db:
-    image: mongo:4.2.6
+    build: ./mongo
+    restart: always
     environment:
       MONGO_INITDB_DATABASE: tweets
       MONGO_INITDB_ROOT_USERNAME: root
@@ -9,12 +10,7 @@ services:
     ports:
       - 27017:27017
     volumes:
-      - ./data:/data/db
-  mongo-seed:
-    build:
-      ./mongo-seed
-    depends_on:
-      - db
+      - ./mongo/data:/data/db
   web:
     build: .
     ports:

@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 def get_db():
     if 'db' not in g:
-        client = MongoClient('mongodb://root:rootpassword@db:27017')
+        client = MongoClient(f'mongodb://root:rootpassword@db:27017')
         g.db = client.get_database('tweets')
     return g.db
 

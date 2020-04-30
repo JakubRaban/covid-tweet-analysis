@@ -6,13 +6,11 @@ services:
     environment:
       MONGO_INITDB_DATABASE: tweets
       MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: /run/secrets/db_password
+      MONGO_INITDB_ROOT_PASSWORD: rootpassword
     ports:
       - 27017:27017
     volumes:
       - ./mongo/data:/data/db
-    secrets:
-      - db_password
   web:
     build: .
     ports:
@@ -25,7 +23,3 @@ services:
       - db
     volumes:
       - .:/code
-
-secrets:
-  db_password:
-    file: db_password.txt

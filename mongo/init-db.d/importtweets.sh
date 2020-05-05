@@ -1,0 +1,1 @@
+mongorestore -d tweets /inittweets

@@ -20,9 +20,10 @@ def get_test_collection():
 
 @app.route('/')
 def hello():
-    cursor = get_test_collection().find({})
-    all_our_faults = [doc['fault'] for doc in cursor]
-    return render_template('index.html', faults=all_our_faults)
+    group_tweets = get_db().collection_names()
+    group_tweets.sort()
+    homepage = {name: [doc['text'] for doc in get_db()[name].find({})[:10]] for name in group_tweets if name != 'test1'}
+    return render_template('index.html', homepage=homepage)
 
 
 if __name__ == '__main__':

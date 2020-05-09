@@ -14,12 +14,24 @@ MONGODB_CONNECTION_URL_ENVVAR = "MONGODB_CONNECTION_URL"
 MONGODB_DBNAME_ENVVAR = "MONGODB_DBNAME"
 
 
-async def fetch(query, source, database, collection):
+async def fetch(query, source, database, collection) -> int:
+    count = 0
+    buffer = []
+    buff_size = 50
     async for tweet in source.query(query):
-        await database.insert(tweet, collection)
+        count += 1
+        buffer.append(tweet)
+        if len(buffer) >= buff_size:
+            await database.bulk_insert(buffer, collection)
+            buffer = []
+
+    if len(buffer) > 0:
+        await database.bulk_insert(buffer, collection)
+
+    return count
 
 
-async def main(query, twitter_api, collection, product, max_tweets):
+async def main(query, twitter_api, collection, product, max_tweets, lang: str = 'pl') -> int:
     if twitter_api:
         credentials = twitter.Credentials(
             api_key=os.getenv(TWITTER_API_KEY_ENVVAR),
@@ -35,7 +47,7 @@ async def main(query, twitter_api, collection, product, max_tweets):
 
         if product == '7day':
             source = await twitter.StandardClient.from_api_key(credentials)
-            twitter_query = twitter.StandardQuery(query_string=query, max_results=max_tweets)
+            twitter_query = twitter.StandardQuery(query_string=query, max_results=max_tweets, lang=lang)
         else:
             source = await twitter.PremiumClient.from_api_key(credentials)
             source.product = product
@@ -49,33 +61,33 @@ async def main(query, twitter_api, collection, product, max_tweets):
         os.getenv(MONGODB_CONNECTION_URL_ENVVAR), os.getenv(MONGODB_DBNAME_ENVVAR)
     )
 
-    await fetch(twitter_query, source, db, collection)
+    return await fetch(twitter_query, source, db, collection)
 
 
-@click.command()
-@click.option(
+@ click.command()
+@ click.option(
     "--query",
     "-q",
     prompt="Query",
     help="Query sent to Twitter API, as specified in its documentation",
 )
-@click.option(
+@ click.option(
     "--twitter_api", "-t", is_flag=True, help="Use Twitter API instead of fake data"
 )
-@click.option(
+@ click.option(
     "--mongo_collection",
     "-c",
     default="Influencerzy",
     help="Mongo collection to insert tweets to",
 )
-@click.option(
+@ click.option(
     '--endpoint-product',
     '-p',
     default='7day',
     type=click.Choice(['7day', '30day', 'fullarchive']),
     help='Twitter API endpoint product'
 )
-@click.option(
+@ click.option(
     '--max-tweets',
     '-m',
     default=10000,

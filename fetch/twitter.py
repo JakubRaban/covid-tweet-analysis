@@ -1,10 +1,15 @@
 import abc
+import asyncio
 import datetime
+import logging
+import re
 from collections import AsyncIterator, namedtuple
 from contextlib import asynccontextmanager
 from typing import Dict
 
 import aiohttp
+
+logger = logging.getLogger(__name__)
 
 
 async def retrieve_bearer_token(api_key, api_secret_key) -> str:
@@ -24,8 +29,8 @@ async def retrieve_bearer_token(api_key, api_secret_key) -> str:
 
 TWEETS_PER_REQUEST = 100
 
-class APIQuery(abc.ABC):
 
+class APIQuery(abc.ABC):
     @abc.abstractmethod
     def to_query_dict(self) -> Dict:
         ...
@@ -88,10 +93,10 @@ class StandardQuery(APIQuery):
     def to_query_dict(self) -> Dict:
         return {
             "q": self._query_string,
-            "count": TWEETS_PER_REQUEST,
+            "count": min(TWEETS_PER_REQUEST, self._max_results),
             "until": self._datetime_to_twitter_format(self._until),
-            'tweet_mode': self._tweet_mode,
-            'lang': self._lang or ''
+            "tweet_mode": self._tweet_mode,
+            "lang": self._lang or ""
         }
 
     @property
@@ -171,6 +176,11 @@ class PremiumClient(Client):
 
 
 class StandardClient(Client):
+
+    def __init__(self, *args, rate_limit_timeout=15, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        self.rate_limit_timeout = rate_limit_timeout
+
     @asynccontextmanager
     async def _twitter_api_request(self, url, **kwargs):
         async with aiohttp.ClientSession() as session:
@@ -179,6 +189,7 @@ class StandardClient(Client):
 
     async def query(self, query: StandardQuery) -> AsyncIterator:
         query_dict = query.to_query_dict()
+        max_id_regex = r'max_id=\d+&'
 
         remaining_results = query.results
 
@@ -188,17 +199,28 @@ class StandardClient(Client):
                 params=query_dict
             ) as r:
                 json_response = await r.json()
-                if r.status != 200:
+
+                if r.status == 429:
+                    logger.warning('API rate limit exceeded, sleeping for %d minutes...', self.rate_limit_timeout)
+                    await asyncio.sleep(self.rate_limit_timeout * 60)
+                    continue
+                
+                elif r.status != 200:
                     raise Exception(f"Tweet retrieval error, status: {r.status}, {await r.text()}")
+
+                remaining_results -= len(json_response['statuses'])
+                metadata = json_response.get('search_metadata', {})
+                if "next_results" in metadata:
+                    match = re.search(max_id_regex, metadata['next_results'])
+                    if match:
+                        query_dict['max_id'] = match.group()[len('max_id='):-1]
+                    else:
+                        break
+                else:
+                    break
 
                 for tweet in json_response["statuses"]:
                     yield tweet
-
-                remaining_results -= TWEETS_PER_REQUEST
-                if "next" in json_response:
-                    query_dict["next"] = json_response["next"]
-                else:
-                    break
 
 
 class FakeClient(PremiumClient):

@@ -13,11 +13,13 @@ class Tweets:
         filtered_iterator = (
             process_tweet(x) for x in self._data_iterator if not is_faulty(x)
         )
-        series = {'text': [], 'text2': []}
+        series = {key: [] for key in TWEET_FIELDS.keys()}
         for tweet in filtered_iterator:
             for key, value in tweet.items():
                 series[key].append(value)
-        return pd.DataFrame(series)
+        return pd.DataFrame({
+            name: pd.Series(values, dtype=TWEET_FIELDS[name][0]) for name, values in series.items()
+        })
 
 
 class TweetSource:
@@ -36,11 +38,13 @@ class TweetSource:
         return Tweets(data_chain)
 
 
+TWEET_FIELDS = {
+    'text': ('str', lambda tweet: tweet.get('text', '')),
+}
+
+
 def process_tweet(tweet: dict) -> dict:
-    return {
-        'text': tweet.get('text', ''),
-        'text2': 'twój stary'
-    }
+    return {name: f(tweet) for name, (_, f) in TWEET_FIELDS.items()}
 
 
 def is_faulty(tweet: dict) -> bool:

@@ -2,27 +2,46 @@
 from flask import Flask, render_template, g
 from pymongo import MongoClient
 
+from data_source import TweetSource
+
 app = Flask(__name__)
 
 
-def get_db():
-    if 'db' not in g:
-        client = MongoClient(f'mongodb://root:rootpassword@db:27017')
-        g.db = client.get_database('tweets')
-    return g.db
+def g_factory(g):
+    def decorator(func):
+        name = func.__name__
+
+        def result_func():
+            if name not in g:
+                setattr(g, name, func(g))
+            return getattr(g, name)
+        return result_func
+    return decorator
 
 
-def get_test_collection():
-    if 'test_collection' not in g:
-        g.test_collection = get_db()['test1']
-    return g.test_collection
+@g_factory(g)
+def get_db(g):
+    client = MongoClient(f'mongodb://root:rootpassword@db:27017')
+    return client.get_database('tweets')
+
+
+@g_factory(g)
+def get_test_collection(g):
+    return get_db()['test1']
+
+
+@g_factory(g)
+def get_tweet_source(g):
+    return TweetSource(get_db())
 
 
 @app.route('/')
 def hello():
-    group_tweets = get_db().collection_names()
-    group_tweets.sort()
-    homepage = {name: [doc['text'] for doc in get_db()[name].find({})[:10]] for name in group_tweets if name != 'test1'}
+    tweet_source = get_tweet_source()
+    homepage = {
+        group: [repr(tweet_source.get_tweets((group,)).to_data_frame()['text'])]
+        for group in tweet_source.collection_names
+    }
     return render_template('index.html', homepage=homepage)
 
 

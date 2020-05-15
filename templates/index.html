@@ -1,21 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>IO</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% block title %}Home page{% endblock %}
+{% block content %}
 
-<h1>Dzień dobry z tej strony aplikacja do analizowania tweetów o koronawirusie</h1>
-
-{% for group, tweets in homepage.items() %}
-<h2>Tweety grupy {{ group }}</h2>
-    <ul>
-        {% for tweet in tweets %}
-            <li>{{ tweet }}</li>
-        {% endfor %}
-    </ul>
-{% endfor %}
-
-</body>
-</html>
+{% endblock %}

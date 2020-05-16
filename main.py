@@ -75,7 +75,23 @@ def homepage_view():
             'average_retweets': 120
         }
     ]
-    return render_template('homepage.html', homepage=homepage, users=users)
+    return render_template('homepage.html')
+
+
+@app.route('/user-summary/<username>')
+def user_summary(username):
+    summary = {
+        "Grupa społeczna": 'politycy',
+        "Tweety o koronawirusie": 123,
+        "Retweetowane": 23,
+        "Własne tweety": 100,
+        "Średnia ilość polubień": 67,
+        "Średnia ilość retweetów": 23,
+        "Najwięcej polubień": 249,
+        "Najwięcej retweetów": 35
+    }
+
+    return render_template('user-summary.html', user=username, summary=summary)
 
 
 @app.route('/user-tweets')

@@ -1,0 +1,48 @@
+{% extends "base.html" %} {% block title %}Szczegóły użytkownika{% endblock %}
+{% block content %}
+<style>
+    .rounded-5 {
+        border-radius: 10px !important;
+    }
+
+    .v-center {
+        display: flex;
+        align-items: center;
+    }
+</style>
+
+<h2 class="text-center mt-5 mb-5 font-weight-bold">
+    Szczegóły użytkownika
+</h2>
+
+<div class="container">
+    <div class="row">
+        <div class="col border rounded-5 m-2 p-3 bg-light">
+            <h3 class="text-center mt-4 mb-3 font-weight-bold">
+                Nazwa: {{user}}
+            </h3>
+            {% for attr, value in summary.items() %}
+            <div class="row px-3 my-2">
+                <div class='col shadow-lg rounded-5 mx-2 bg-dark p-1 v-center'>
+                    <div class="col text-center text-light font-weight-bold">
+                        {{attr}}
+                    </div>
+                </div>
+                <div class='col shadow-lg rounded-5 mx-2 p-1 v-center'>
+                    <div class="col text-center">
+                        {{value}}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="col m-2 p-3">
+            <h3 class="text-center mt-2 mb-2 font-weight-bold">
+                Popularność użytkownika
+            </h3>
+            <img src="/static/img/stonks.png" class="image-fluid w-100 rounded-5" alt="responsive image" />
+        </div>
+    </div>
+</div>
+{% endblock %}

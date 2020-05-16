@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}Home page{% endblock %}
+{% block content %}
+    <div class="container-xl pt-4">
+        <form>
+            <h3>Szukaj użytkowników</h3>
+            <div class="form-group">
+                <label for="inputUsername">Nazwa użytkownika</label>
+                <input type="text" class="form-control" id="inputUsername">
+            </div>
+            <button type="submit" class="btn btn-primary">Szukaj</button>
+        </form>
+    </div>
+    <table class="table table-striped" id="datatable-users">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">Nazwa użytkownika</th>
+            <th scope="col">Grupa społeczna</th>
+            <th scope="col"># tweetów o COVID</th>
+            <th scope="col">Średnio polubień</th>
+            <th scope="col">Maksymalnie polubień</th>
+            <th scope="col">Średnio retweetów</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr>
+                <th scope="row">{{ user["username"] }}</th>
+                <th scope="row">{{ user["social_group"] }}</th>
+                <th scope="row">{{ user["covid_tweet_count"] }}</th>
+                <th scope="row">{{ user["average_favourites"] }}</th>
+                <th scope="row">{{ user["most_favourites"] }}</th>
+                <th scope="row">{{ user["average_retweets"] }}</th>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript" charset="utf8">
+        $(document).ready(() => {
+            $('#datatable-users').DataTable({
+                "language": {
+                    "processing": "Przetwarzanie...",
+                    "search": "Szukaj:",
+                    "lengthMenu": "Pokaż _MENU_ pozycji",
+                    "info": "Pozycje od _START_ do _END_ z _TOTAL_ łącznie",
+                    "infoEmpty": "Pozycji 0 z 0 dostępnych",
+                    "infoFiltered": "(filtrowanie spośród _MAX_ dostępnych pozycji)",
+                    "infoPostFix": "",
+                    "loadingRecords": "Wczytywanie...",
+                    "zeroRecords": "Nie znaleziono pasujących pozycji",
+                    "emptyTable": "Brak danych",
+                    "paginate": {
+                        "first": "Pierwsza",
+                        "previous": "Poprzednia",
+                        "next": "Następna",
+                        "last": "Ostatnia"
+                    },
+                    "aria": {
+                        "sortAscending": ": aktywuj, by posortować kolumnę rosnąco",
+                        "sortDescending": ": aktywuj, by posortować kolumnę malejąco"
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock %}

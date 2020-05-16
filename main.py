@@ -82,7 +82,6 @@ def hello():
 def tweet_test():
     t = get_db()['Lekarze'].find({})[0]['id_str']
     html = get_embeddable_tweet_html_by_id(t)
-    print(html)
     return render_template('tweet.html', xdd=html)
 
 

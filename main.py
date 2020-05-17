@@ -43,7 +43,7 @@ def get_embeddable_tweet_html_by_id(tweet_id):
 
 
 @app.route('/')
-def hello():
+def homepage_view():
     tweet_source = get_tweet_source()
     homepage = {
         group: [repr(tweet_source.get_tweets((group,)).to_data_frame()['text'])]
@@ -78,11 +78,29 @@ def hello():
     return render_template('homepage.html', homepage=homepage, users=users)
 
 
+@app.route('/user-tweets')
+def user_tweets_view():
+    tweets = [
+        {
+            'date_published': '2020-01-09',
+            'text': 'Żałosna jesteś w chuj dwulicowa nara'
+        },
+        {
+            'date_published': '2020-01-10',
+            'text': 'Hej chcesz coś z avonu'
+        }
+    ]
+    embed_tweet_html = get_embeddable_tweet_html_by_id(get_db()['Lekarze'].find({})[0]['id_str'])
+    return render_template('usertweets.html', tweets=tweets,
+                           embedded_tweet=embed_tweet_html
+                           )
+
+
 @app.route('/tweet-test')
-def tweet_test():
+def tweet_test_view():
     t = get_db()['Lekarze'].find({})[0]['id_str']
     html = get_embeddable_tweet_html_by_id(t)
-    return render_template('tweet.html', xdd=html)
+    return render_template('tweettest.html', xdd=html)
 
 
 if __name__ == '__main__':

@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %}Home page{% endblock %}
+{% block content %}
+
+<style>
+    .rounded-5 {
+        border-radius: 10px !important;
+    }
+
+    .v-center {
+        display: flex;
+        align-items: center;
+    }
+
+    a {
+        outline: none;
+    }
+</style>
+
+<h2 class="text-center mt-5 mb-5 font-weight-bold">
+    Grupy społeczne
+</h2>
+
+<div class='container'>
+    {% for group in groups %}
+    <div class='mx-auto d-flex justify-content-center col-md-8'>
+        <div class='row my-3 bg-light shadow p-3 w-100'>
+            <div class='container pt-0 pb-2 rounded-5'>
+                <div class='row py-1'>
+                    <div class=' shadow-lg rounded-5 mx-2 bg-dark px-3 py-1 button' data-toggle="modal"
+                        data-target="#{{group.name}}-modal">
+                        <h3 class='text-center text-light font-weight-bold v-center'>
+                            {{ group.name}}
+                        </h3>
+                    </div>
+                </div>
+                <div class='row'>
+                    <div class='mx-2 mt-2'>
+                        <p>
+                            {{ group.description }}
+                        </p>
+                    </div>
+                </div>
+                <div class='row'>
+                    {% for user in group.users[:6] %}
+                    <a href="/user-summary/{{user}}">
+                        <div class=' mx-2 my-1 d-flex flex-row flex-wrap shadow rounded-5 p-2'>
+                            <div class="text-center v-center">
+                                {{ user }}
+                            </div>
+                        </div>
+                    </a>
+                    {% endfor %}
+                    {% if group.users|length > 6 %}
+                    <a class="button" data-toggle="modal" data-target="#{{group.name}}-modal" href='#'>
+                        <div class=' mx-2 my-1 d-flex flex-row flex-wrap shadow rounded-5 p-2'>
+                            <div class="text-center v-center">
+                                ...
+                            </div>
+                        </div>
+                    </a>
+                    {% endif %}
+                </div>
+
+                <div class="modal fade" id="{{group.name}}-modal" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3 class="modal-title text-center font-weight-bold col-12">Użytkownicy
+                                    grupy: <span class='font-weight-normal'>{{group.name}}</span></h5>
+                            </div>
+                            <div class="modal-body">
+                                {% for user in group.users %}
+                                <a href="/user-summary/{{user}}">
+                                    <div class='m-2 row shadow rounded-5 p-2 d-flex justify-content-center'>
+                                        <div class="text-center v-center">
+                                            {{ user }}
+                                        </div>
+                                    </div>
+                                </a>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+
+
+{% endblock %}

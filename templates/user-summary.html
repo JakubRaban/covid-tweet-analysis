@@ -9,6 +9,10 @@
         display: flex;
         align-items: center;
     }
+
+    a {
+        outline: none;
+    }
 </style>
 
 <h2 class="text-center mt-5 mb-5 font-weight-bold">
@@ -19,7 +23,7 @@
     <div class="row">
         <div class="col border rounded-5 m-2 p-3 bg-light">
             <h3 class="text-center mt-4 mb-3 font-weight-bold">
-                Nazwa: {{user}}
+                Nazwa: <span class='font-weight-normal'>{{user}}</span>
             </h3>
             {% for attr, value in summary.items() %}
             <div class="row px-3 my-2">
@@ -44,5 +48,13 @@
             <img src="/static/img/stonks.png" class="image-fluid w-100 rounded-5" alt="responsive image" />
         </div>
     </div>
+
+    <a href='/user-tweets'>
+        <div class="d-flex justify-content-center">
+            <div class='button rounded-5 bg-dark text-center  text-white my-3 p-3 font-weight-bold'>
+                Zobacz tweety
+            </div>
+        </div>
+    </a>
 </div>
 {% endblock %}

@@ -1,6 +1,7 @@
 
 from flask import Flask, render_template, g
 from pymongo import MongoClient
+from typing import Iterable, NamedTuple
 
 from data_source import TweetSource
 import requests
@@ -108,8 +109,22 @@ def user_tweets_view():
     ]
     embed_tweet_html = get_embeddable_tweet_html_by_id(get_db()['Lekarze'].find({})[0]['id_str'])
     return render_template('usertweets.html', tweets=tweets,
-                           embedded_tweet=embed_tweet_html
-                           )
+                           embedded_tweet=embed_tweet_html)
+
+
+@app.route('/user-groups')
+def user_groups_view():
+    UserGroup = NamedTuple('UserGroup', (('name', str), ('users', Iterable[str]), ('description', str)))
+
+    groups = [
+        UserGroup('Politycy', ['Andrzej Duda', 'Zbigniew Stonoga', 'Stanisław Polak - mój prezydent'] * 8,
+                  'No bardzo fajna grupa ludzi, serdecznie polecam, piszą rewelacyjne tweety'),
+        UserGroup('Politycy', ['Andrzej Duda', 'Zbigniew Stonoga', 'Stanisław Polak - mój prezydent'],
+                  'No bardzo fajna grupa ludzi, serdecznie polecam, piszą rewelacyjne tweety'),
+        UserGroup('Politycy', ['Andrzej Duda', 'Zbigniew Stonoga', 'Stanisław Polak - mój prezydent'],
+                  'No bardzo fajna grupa ludzi, serdecznie polecam, piszą rewelacyjne tweety'),
+    ]
+    return render_template('user-groups.html', groups=groups)
 
 
 @app.route('/tweet-test')

@@ -83,11 +83,15 @@ def user_tweets_view():
     tweets = [
         {
             'date_published': '2020-01-09',
-            'text': 'Żałosna jesteś w chuj dwulicowa nara'
+            'text': 'Głosuję na prezydenta Dudę prawdziwego prezydenta, nie lubię opozycji'
         },
         {
             'date_published': '2020-01-10',
-            'text': 'Hej chcesz coś z avonu'
+            'text': 'A nie jednak nie lubię prezydenta Dudy  nie głosuję na niego'
+        },
+        {
+            'date_published': '2020-01-11',
+            'text': 'Nie wiem na kogo głosować mam gdzieś te wybory'
         }
     ]
     embed_tweet_html = get_embeddable_tweet_html_by_id(get_db()['Lekarze'].find({})[0]['id_str'])

@@ -50,24 +50,24 @@
             <thead class="thead-dark">
             <tr>
                 <th scope="col">Użytkownik</th>
-                <th scope="col">Tweety</th>
                 <th scope="col">Grupa społeczna</th>
                 <th scope="col"># tweetów o COVID</th>
                 <th scope="col">Średnio polubień</th>
                 <th scope="col">Maksymalnie polubień</th>
                 <th scope="col">Średnio retweetów</th>
+                <th scope="col">Tweety</th>
             </tr>
             </thead>
             <tbody>
             {% for user in users %}
                 <tr>
                     <th scope="row"><a href="#">{{ user["username"] }}</a></th>
-                    <th scope="row"><a href="#">Zobacz</a></th>
                     <th scope="row"><a href="#">{{ user["social_group"] }}</a></th>
                     <th scope="row">{{ user["covid_tweet_count"] }}</th>
                     <th scope="row">{{ user["average_favourites"] }}</th>
                     <th scope="row">{{ user["most_favourites"] }}</th>
                     <th scope="row">{{ user["average_retweets"] }}</th>
+                    <th scope="row"><a href="#">Zobacz</a></th>
                 </tr>
             {% endfor %}
             </tbody>

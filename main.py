@@ -1,7 +1,6 @@
 
 from flask import Flask, render_template, g
 from pymongo import MongoClient
-from typing import Iterable, NamedTuple
 
 from data_source import TweetSource
 import requests
@@ -128,17 +127,7 @@ def user_tweets_view_selected_tweet(user_id, tweet_id):
 
 @app.route('/user-groups')
 def user_groups_view():
-    UserGroup = NamedTuple('UserGroup', (('name', str), ('users', Iterable[str]), ('description', str)))
-
-    groups = [
-        UserGroup('Politycy', ['Andrzej Duda', 'Zbigniew Stonoga', 'Stanisław Polak - mój prezydent'] * 8,
-                  'No bardzo fajna grupa ludzi, serdecznie polecam, piszą rewelacyjne tweety'),
-        UserGroup('Politycy', ['Andrzej Duda', 'Zbigniew Stonoga', 'Stanisław Polak - mój prezydent'],
-                  'No bardzo fajna grupa ludzi, serdecznie polecam, piszą rewelacyjne tweety'),
-        UserGroup('Politycy', ['Andrzej Duda', 'Zbigniew Stonoga', 'Stanisław Polak - mój prezydent'],
-                  'No bardzo fajna grupa ludzi, serdecznie polecam, piszą rewelacyjne tweety'),
-    ]
-    return render_template('user-groups.html', groups=groups)
+    return render_template('user-groups.html', groups=get_tweet_source().get_user_groups())
 
 
 @app.route('/tweet-test')

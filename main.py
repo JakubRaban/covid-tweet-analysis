@@ -76,7 +76,7 @@ def homepage_view():
             'average_retweets': 120
         }
     ]
-    return render_template('homepage.html')
+    return render_template('homepage.html', users=users)
 
 
 @app.route('/user-summary/<username>')
@@ -111,9 +111,19 @@ def user_tweets_view():
             'text': 'Nie wiem na kogo głosować mam gdzieś te wybory'
         }
     ]
-    embed_tweet_html = get_embeddable_tweet_html_by_id(get_db()['Lekarze'].find({})[0]['id_str'])
+    embed_tweet_html = get_embeddable_tweet_html_by_id(get_db()['Lekarze'].find({})[2]['id_str'])
     return render_template('usertweets.html', tweets=tweets,
                            embedded_tweet=embed_tweet_html)
+
+
+@app.route('/user-tweets/<user_id>')
+def user_tweets_view_selected_user(user_id):
+    pass
+
+
+@app.route('/user-tweets/<user_id>/<tweet_id>')
+def user_tweets_view_selected_tweet(user_id, tweet_id):
+    pass
 
 
 @app.route('/user-groups')

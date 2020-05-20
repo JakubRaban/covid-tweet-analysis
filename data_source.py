@@ -1,5 +1,5 @@
 from itertools import chain
-from typing import List, Iterable, Optional, Tuple
+from typing import Collection, Iterable, Optional, NamedTuple
 
 import pandas as pd
 from pymongo.database import Database
@@ -22,6 +22,9 @@ class Tweets:
         })
 
 
+UserGroup = NamedTuple('UserGroup', (('name', str), ('users', Iterable[str]), ('description', str)))
+
+
 class TweetSource:
     def __init__(self, db: Database):
         self._db: Database = db
@@ -29,6 +32,15 @@ class TweetSource:
     @property
     def collection_names(self) -> Iterable[str]:
         return sorted(self._db.list_collection_names())
+
+    def get_user_groups(self):
+        # TODO temporary solution
+        for group_name in self.collection_names:
+            if group_name == 'test1':
+                continue
+            description = "Brak opisu"
+            usernames = list(set(tweet['user']['name'] for tweet in self._db[group_name].find()))
+            yield UserGroup(group_name, usernames, description)
 
     def get_tweets(self, collections: Iterable[str], filter_params: Optional[dict] = None) -> Tweets:
         filter_params = filter_params or {}

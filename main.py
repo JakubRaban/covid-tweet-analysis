@@ -4,6 +4,7 @@ from matplotlib.figure import Figure
 from pymongo import MongoClient
 
 from analyses import results
+from analyses.sample import SampleAnalysis
 from data_source import TweetSource
 import requests
 
@@ -148,23 +149,16 @@ def tweet_test_view():
     return render_template("tweettest.html", xdd=html)
 
 
-@app.route("/test-result-render")
-def test_result_rendering():
-    result = results.TextAnalysisResult("Example text analysis result")
-    result2 = results.DataFrameAnalysisResult(
-        pd.DataFrame({"xd": [2, 1], "yd": [3, 7]})
-    )
+@app.route("/sample_analyisis_example")
+def sample_analyisis_example():
+    tweet_source = get_tweet_source()
+    analysis = SampleAnalysis()
+    user_groups = [next(tweet_source.get_user_groups()).name] # only first one
+    print(user_groups)
+    result = analysis.run(tweet_source.get_tweets(user_groups))
 
-    fig = Figure()
-    ax = fig.subplots()
-    ax.plot([21, 37, 14, 88])
-    result3 = results.FigureAnalysisResult(fig)
-
-    composite_result = results.CompositeAnalysisResult(
-        text_analysis=result, dataframe_analysis=result2, figure_analysis=result3,
-    )
     return render_template(
-        "test_result_render.html", result=composite_result.render_html()
+        "test_result_render.html", result=result.render_html()
     )
 
 

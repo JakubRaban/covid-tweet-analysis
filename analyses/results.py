@@ -12,7 +12,7 @@ class AnalysisResult(abc.ABC):
     """ Encapsulates result of analysis in a way that is easy to render
     """
 
-    @abc.abstractmethodblac
+    @abc.abstractmethod
     def render_html(self) -> str:
         """ Renders result to an HTML
 
@@ -35,7 +35,7 @@ class CompositeAnalysisResult(AnalysisResult):
     """ Composes and displays different analyses results as one result
     """
 
-    def __init__(self, **kwargs: Dict[str, AnalysisResult]):
+    def __init__(self, **kwargs: AnalysisResult):
         """
         :param kwargs: Analyses to be composed, identified by their names
         """

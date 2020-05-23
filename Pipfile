@@ -10,6 +10,7 @@ tweepy = "*"
 flask = "*"
 pymongo = "*"
 pandas = "*"
+matplotlib = "*"
 
 [requires]
 python_version = "3.8"

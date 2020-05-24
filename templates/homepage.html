@@ -53,8 +53,7 @@
         $(document).ready(() => {
             $('#stats').toggleClass("table table-striped table-bordered")
             $('#stats thead').toggleClass("thead-dark")
-            $('#stats').DataTable({
-                "aaSorting": [[1, "desc"]],
+            let dt = $('#stats').DataTable({
                 "language": {
                     "processing": "Przetwarzanie...",
                     "search": " Wyszukaj dowolną frazę:",
@@ -78,6 +77,7 @@
                     }
                 }
             });
+            dt.columns(-1).order("desc").draw()
         });
     </script>
 {% endblock %}

@@ -32,7 +32,7 @@ class RangeAnalysis(Analysis):
                       'Ilość śledzących': followers_per_user}
 
         range_frame = pd.DataFrame(range_dict)
-        range_frame.insert(0, 'Współczynnik zasięgu', self.calculate_range(range_frame))
+        range_frame['Współczynnik zasięgu'] = self.calculate_range(range_frame)
         range_frame = range_frame.sort_values('Współczynnik zasięgu', ascending=False)
 
         top_n_range = range_frame.sort_values('Współczynnik zasięgu', ascending=False).head(self.to_plot_amount)

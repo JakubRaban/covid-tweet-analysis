@@ -4,7 +4,7 @@
     <div class="container-xl p-3">
         <div class="container border p-3">
             <h3>Selekcjonuj dane</h3>
-            <form action="/" method="post">
+            <form action="/" method="get">
                 <div class="container">
                     <h5>Zakres dat</h5>
                     <div class="row">
@@ -21,7 +21,7 @@
                         <div class="col form-group">
                             <label for="social-group">Grupa społeczna</label>
                             <select class="form-control" id="social-group" name="social-group">
-                                <option value="none">(Dowolna)</option>
+                                <option value="all">(Dowolna)</option>
                                 <option value="politicians">Politycy</option>
                                 <option value="influencers">Influencerzy</option>
                                 <option value="doctors">Lekarze</option>
@@ -33,10 +33,8 @@
                         <div class="col form-group">
                             <label for="statistic-type">Rodzaj statystyki</label>
                             <select class="form-control" id="statistic-type" name="statistic-type">
-                                <option value="general">Ogólna</option>
-                                <option value="popularity">Zasięg użytkownika</option>
-                                <option value="social-group">Grupa społeczna</option>
-                                <option value="conspiracy">Teorie spiskowe</option>
+                                <option value="user-range">Zasięg użytkowników</option>
+                                <option value="most-tweet-count">Ilość tweetów użytkowników</option>
                             </select>
                         </div>
                     </div>
@@ -46,39 +44,14 @@
         </div>
     </div>
     <div class="container-fluid">
-        <table class="table table-striped table-bordered" id="datatable-users">
-            <thead class="thead-dark">
-            <tr>
-                <th scope="col">Użytkownik</th>
-                <th scope="col">Grupa społeczna</th>
-                <th scope="col"># tweetów o COVID</th>
-                <th scope="col">Średnio polubień</th>
-                <th scope="col">Maksymalnie polubień</th>
-                <th scope="col">Średnio retweetów</th>
-                <th scope="col">Tweety</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for user in users %}
-                <tr>
-                    <th scope="row"><a href="#">{{ user["username"] }}</a></th>
-                    <th scope="row"><a href="#">{{ user["social_group"] }}</a></th>
-                    <th scope="row">{{ user["covid_tweet_count"] }}</th>
-                    <th scope="row">{{ user["average_favourites"] }}</th>
-                    <th scope="row">{{ user["most_favourites"] }}</th>
-                    <th scope="row">{{ user["average_retweets"] }}</th>
-                    <th scope="row"><a href="#">Zobacz</a></th>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+        {{ result|safe }}
     </div>
 {% endblock %}
 
 {% block scripts %}
     <script type="text/javascript" charset="utf8">
         $(document).ready(() => {
-            $('#datatable-users').DataTable({
+            $('table').DataTable({
                 "language": {
                     "processing": "Przetwarzanie...",
                     "search": " Wyszukaj dowolną frazę:",

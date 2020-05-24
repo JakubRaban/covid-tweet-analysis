@@ -1,14 +1,50 @@
+from datetime import date
+from typing import Optional
+
 import requests
 from flask import Flask, render_template, g, request
 from pymongo import MongoClient
 
 from analyses.most_tweets_per_user import MostTweetsPerUser
 from analyses.range_analysis import RangeAnalysis
-from analyses.sample import SampleAnalysis
 from analyses.tweets_per_day_trend import TweetsPerDayTrend
 from data_source import TweetSource
 
 app = Flask(__name__)
+
+analyses = {
+    "user-range": RangeAnalysis,
+    "most-tweet-count": MostTweetsPerUser
+}
+
+user_groups = {
+    "politicians": ["Inni_Politycy", "KO", "Konfederacja", "Lewica", "PIS", "PSL_Kukiz"],
+    "influencers": ["Influencerzy"],
+    "doctors": ["Lekarze"],
+    "journalists": ["Dziennikarze"],
+}
+
+
+def dates_to_mongo_filter(from_date: str, to_date: str):
+    date_filter_dict = {}
+    if from_date:
+        date_filter_dict['$gte'] = date.fromisoformat(f"{from_date}T")
+    if to_date:
+        date_filter_dict['$lte'] = date.fromisoformat(f"{to_date}T")
+    return [
+        {
+            "$addFields": {
+                "created_at": {
+                    "$toDate": "$created_at"
+                }
+            }
+        },
+        {
+            "$match": {
+                "created_at": date_filter_dict
+            }
+        }
+    ] if date_filter_dict else []
 
 
 def g_factory(g):
@@ -49,6 +85,16 @@ def get_embeddable_tweet_html_by_id(tweet_id):
     return r.json()["html"]
 
 
+def run_analysis(analysis_name: str = "user-range", user_groups_name: str = "all", date_from: Optional[str] = None, date_to: Optional[str] = None):
+    tweet_source = get_tweet_source()
+    analysis_name = analyses[analysis_name]()
+    global user_groups
+    groups = [group.name for group in tweet_source.get_user_groups()] if user_groups_name == "all" \
+        else user_groups[user_groups_name]
+    result = analysis_name.run(tweet_source.get_tweets(groups))
+    return result
+
+
 # @app.route("/")
 # def homepage_view():
 #     tweet_source = get_tweet_source()
@@ -85,11 +131,17 @@ def get_embeddable_tweet_html_by_id(tweet_id):
 #     return render_template("homepage.html", users=users)
 
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/')
 def homepage_view():
-    if request.method == 'POST':
-        print(request.form)
-    return render_template("homepage.html", users=[])
+    if request.form:
+        print("abc")
+        result = run_analysis(
+            request.form['statistic-type'], request.form['social-group'],
+            request.form.get('date-from', None), request.form.get('date-to', None)
+        )
+    else:
+        result = run_analysis()
+    return render_template("homepage.html", result=result.render_html())
 
 
 @app.route("/user-summary/<username>")
@@ -160,7 +212,7 @@ def tweet_test_view():
 def sample_analyisis_example():
     tweet_source = get_tweet_source()
     analysis = TweetsPerDayTrend()
-    user_groups = [next(tweet_source.get_user_groups()).name] # only first one
+    user_groups = [next(tweet_source.get_user_groups()).name]  # only first one
     print(user_groups)
     result = analysis.run(tweet_source.get_tweets(user_groups))
 

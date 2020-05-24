@@ -78,7 +78,9 @@
 {% block scripts %}
     <script type="text/javascript" charset="utf8">
         $(document).ready(() => {
-            $('#datatable-users').DataTable({
+            $('#stats').className = "table table-striped table-bordered"
+            $('#stats thead').className = "thead-dark"
+            $('#stats').DataTable({
                 "language": {
                     "processing": "Przetwarzanie...",
                     "search": " Wyszukaj dowolną frazę:",

@@ -131,13 +131,12 @@ def run_analysis(analysis_name: str = "user-range", user_groups_name: str = "all
 #     return render_template("homepage.html", users=users)
 
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def homepage_view():
     if request.form:
-        print("abc")
         result = run_analysis(
             request.form['statistic-type'], request.form['social-group'],
-            request.form.get('date-from', None), request.form.get('date-to', None)
+            request.form['date-from'] or None, request.form['date-to'] or None
         )
     else:
         result = run_analysis()

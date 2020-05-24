@@ -57,7 +57,7 @@ class CompositeAnalysisResult(AnalysisResult):
 class DataFrameAnalysisResult(AnalysisResult):
     def __init__(self, dataframe: pd.DataFrame):
         """
-        :param text: DataFrame to be displayed as analysis result
+        :param dataframe: DataFrame to be displayed as analysis result
         """
         self._dataframe = dataframe
 
@@ -68,7 +68,7 @@ class DataFrameAnalysisResult(AnalysisResult):
 class FigureAnalysisResult(AnalysisResult):
     def __init__(self, figure: Figure):
         """
-        :param text: Matplotlib's figure to be displayed as analysis result
+        :param figure: Matplotlib's figure to be displayed as analysis result
         """
         self._figure = figure
 

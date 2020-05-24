@@ -9,7 +9,7 @@ class TweetsPerDayTrend(Analysis):
     def run(self, tweets: Tweets) -> AnalysisResult:
         data = tweets.to_data_frame()
 
-        if self.params['user']:
+        if 'user' in self.params:
             data = data.loc[data['user_name'] == self.params['user']]
 
         data['created_at'] = data.created_at.str.split(" ", expand=True)
@@ -26,7 +26,7 @@ class TweetsPerDayTrend(Analysis):
         plt.xlabel('days')
         plt.ylabel('tweets')
 
-        if self.params['user']:
+        if 'user' in self.params:
             plt.title(self.params['user'] + ' tweets per day')
         else:
             plt.title('Coronavirus tweets per day')

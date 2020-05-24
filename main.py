@@ -1,12 +1,12 @@
-from flask import Flask, render_template, g
-import pandas as pd
-from matplotlib.figure import Figure
+import requests
+from flask import Flask, render_template, g, request
 from pymongo import MongoClient
 
-from analyses import results
+from analyses.most_tweets_per_user import MostTweetsPerUser
+from analyses.range_analysis import RangeAnalysis
 from analyses.sample import SampleAnalysis
+from analyses.tweets_per_day_trend import TweetsPerDayTrend
 from data_source import TweetSource
-import requests
 
 app = Flask(__name__)
 
@@ -49,40 +49,47 @@ def get_embeddable_tweet_html_by_id(tweet_id):
     return r.json()["html"]
 
 
-@app.route("/")
+# @app.route("/")
+# def homepage_view():
+#     tweet_source = get_tweet_source()
+#     homepage = {
+#         group: [repr(tweet_source.get_tweets((group,)).to_data_frame()["text"])]
+#         for group in tweet_source.collection_names
+#     }
+#     users = [
+#         {
+#             "username": "Andrzej Duda",
+#             "social_group": "Politycy",
+#             "covid_tweet_count": 12,
+#             "average_favourites": 5000,
+#             "most_favourites": 17000,
+#             "average_retweets": 2000,
+#         },
+#         {
+#             "username": "Robert Biedroń",
+#             "social_group": "Politycy",
+#             "covid_tweet_count": 53,
+#             "average_favourites": 800,
+#             "most_favourites": 3000,
+#             "average_retweets": 400,
+#         },
+#         {
+#             "username": "Dorota Gawryluk",
+#             "social_group": "Dziennikarze",
+#             "covid_tweet_count": 102,
+#             "average_favourites": 590,
+#             "most_favourites": 1700,
+#             "average_retweets": 120,
+#         },
+#     ]
+#     return render_template("homepage.html", users=users)
+
+
+@app.route('/', methods=['GET', 'POST'])
 def homepage_view():
-    tweet_source = get_tweet_source()
-    homepage = {
-        group: [repr(tweet_source.get_tweets((group,)).to_data_frame()["text"])]
-        for group in tweet_source.collection_names
-    }
-    users = [
-        {
-            "username": "Andrzej Duda",
-            "social_group": "Politycy",
-            "covid_tweet_count": 12,
-            "average_favourites": 5000,
-            "most_favourites": 17000,
-            "average_retweets": 2000,
-        },
-        {
-            "username": "Robert Biedroń",
-            "social_group": "Politycy",
-            "covid_tweet_count": 53,
-            "average_favourites": 800,
-            "most_favourites": 3000,
-            "average_retweets": 400,
-        },
-        {
-            "username": "Dorota Gawryluk",
-            "social_group": "Dziennikarze",
-            "covid_tweet_count": 102,
-            "average_favourites": 590,
-            "most_favourites": 1700,
-            "average_retweets": 120,
-        },
-    ]
-    return render_template("homepage.html", users=users)
+    if request.method == 'POST':
+        print(request.form)
+    return render_template("homepage.html", users=[])
 
 
 @app.route("/user-summary/<username>")
@@ -152,7 +159,7 @@ def tweet_test_view():
 @app.route("/sample_analyisis_example")
 def sample_analyisis_example():
     tweet_source = get_tweet_source()
-    analysis = SampleAnalysis()
+    analysis = TweetsPerDayTrend()
     user_groups = [next(tweet_source.get_user_groups()).name] # only first one
     print(user_groups)
     result = analysis.run(tweet_source.get_tweets(user_groups))

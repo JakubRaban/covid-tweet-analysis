@@ -62,7 +62,7 @@ class DataFrameAnalysisResult(AnalysisResult):
         self._dataframe = dataframe
 
     def render_html(self) -> str:
-        return self._dataframe.to_html()
+        return self._dataframe.to_html(table_id='stats')
 
 
 class FigureAnalysisResult(AnalysisResult):

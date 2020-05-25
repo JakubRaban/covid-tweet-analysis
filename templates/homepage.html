@@ -38,9 +38,14 @@
                             </select>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Zatwierdź</button>
+                    <button type="submit" class="btn btn-primary" id="form-accept">Zatwierdź</button>
                 </div>
             </form>
+        </div>
+    </div>
+    <div class="container-xl" id="loading-message">
+        <div class="jumbotron">
+            <h2 style="text-align: center">Obliczenia w trakcie...</h2>
         </div>
     </div>
     <div class="container-fluid">
@@ -78,6 +83,8 @@
                 }
             });
             dt.columns(-1).order("desc").draw()
+            $('#loading-message').hide()
+            $('#form-accept').click(() => $('#loading-message').show())
         });
     </script>
 {% endblock %}

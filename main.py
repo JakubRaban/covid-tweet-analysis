@@ -6,6 +6,7 @@ from flask import Flask, render_template, g, request
 from pymongo import MongoClient
 
 from analyses.most_tweets_per_user import MostTweetsPerUser
+from analyses.tweets_per_day_trend import TweetsPerDayTrend
 from analyses.range_analysis import RangeAnalysis
 from data_source import TweetSource
 
@@ -13,7 +14,8 @@ app = Flask(__name__)
 
 analyses = {
     "user-range": RangeAnalysis,
-    "most-tweet-count": MostTweetsPerUser
+    "most-tweet-count": MostTweetsPerUser,
+    "tweets-per-day-trend": TweetsPerDayTrend
 }
 
 user_groups = {

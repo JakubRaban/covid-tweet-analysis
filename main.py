@@ -79,7 +79,7 @@ def run_analysis(analysis_name: str = "user-range", user_groups_name: str = "all
     global user_groups
     groups = [group.name for group in tweet_source.get_user_groups()] if user_groups_name == "all" \
         else user_groups[user_groups_name]
-    result = analysis_name.run(tweet_source.get_tweets(groups))
+    result = analysis_name.run(tweet_source.get_tweets(groups, filter_params=dates_to_mongo_filter(date_from, date_to)))
     return result
 
 

@@ -13,6 +13,8 @@ TWITTER_API_DEV_ENV_ENVVAR = "TWITTER_API_DEV_ENV"
 MONGODB_CONNECTION_URL_ENVVAR = "MONGODB_CONNECTION_URL"
 MONGODB_DBNAME_ENVVAR = "MONGODB_DBNAME"
 
+twitter_datetime_format = '%a %b %d %H:%M:%S %z %Y'
+
 
 async def fetch(query, source, database, collection) -> int:
     count = 0
@@ -20,6 +22,9 @@ async def fetch(query, source, database, collection) -> int:
     buff_size = 50
     async for tweet in source.query(query):
         count += 1
+        created_at = tweet.get('created_at', None)
+        if created_at is not None:
+            tweet['created_at'] = datetime.strptime(created_at, twitter_datetime_format)
         buffer.append(tweet)
         if len(buffer) >= buff_size:
             await database.bulk_insert(buffer, collection)

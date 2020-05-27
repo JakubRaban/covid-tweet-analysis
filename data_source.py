@@ -51,14 +51,14 @@ class TweetSource:
 
 
 TWEET_FIELDS = {
-    'text': ('str', lambda t: t['text']),
+    'text': ('str', lambda t: t.get('text', t.get('full_text', ''))),
     'created_at': ('datetime64[ns]', lambda t: t['created_at']),
     'user_id': ('int', lambda t: t['user']['id']),
     'user_name': ('str', lambda t: t['user']['name']),
     'user_screen_name': ('str', lambda t: t['user']['screen_name']),
     'user_followers_count': ('int', lambda t: t['user']['followers_count']),
-    'quote_count': ('int', lambda t: t['quote_count']),
-    'reply_count': ('int', lambda t: t['reply_count']),
+    'quote_count': ('int', lambda t: t.get('quote_count', 0)),
+    'reply_count': ('int', lambda t: t.get('reply_count', 0)),
     'retweet_count': ('int', lambda t: t['retweet_count']),
     'favorite_count': ('int', lambda t: t['favorite_count']),
     'mentions_ids': (

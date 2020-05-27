@@ -1,14 +1,40 @@
+from datetime import date, datetime
+from typing import Optional
+
 import requests
 from flask import Flask, render_template, g, request
 from pymongo import MongoClient
 
 from analyses.most_tweets_per_user import MostTweetsPerUser
-from analyses.range_analysis import RangeAnalysis
-from analyses.sample import SampleAnalysis
 from analyses.tweets_per_day_trend import TweetsPerDayTrend
+from analyses.range_analysis import RangeAnalysis
 from data_source import TweetSource
 
 app = Flask(__name__)
+
+analyses = {
+    "user-range": RangeAnalysis,
+    "most-tweet-count": MostTweetsPerUser,
+    "tweets-per-day-trend": TweetsPerDayTrend
+}
+
+user_groups = {
+    "politicians": ["Inni_Politycy", "KO", "Konfederacja", "Lewica", "PIS", "PSL_Kukiz"],
+    "influencers": ["Influencerzy"],
+    "doctors": ["Lekarze"],
+    "journalists": ["Dziennikarze"],
+}
+
+
+def dates_to_mongo_filter(from_date: str, to_date: str):
+    date_filter_dict = {}
+    if from_date:
+        date_filter_dict['$gte'] = datetime.strptime(f"{from_date}T00:00:00.000000Z", "%Y-%m-%dT%H:%M:%S.%fZ")
+    if to_date:
+        date_filter_dict['$lte'] = datetime.strptime(f"{to_date}T23:59:59.999999Z", "%Y-%m-%dT%H:%M:%S.%fZ")
+    return {
+        "created_at": date_filter_dict
+    } if date_filter_dict else {}
 
 
 def g_factory(g):
@@ -49,47 +75,25 @@ def get_embeddable_tweet_html_by_id(tweet_id):
     return r.json()["html"]
 
 
-# @app.route("/")
-# def homepage_view():
-#     tweet_source = get_tweet_source()
-#     homepage = {
-#         group: [repr(tweet_source.get_tweets((group,)).to_data_frame()["text"])]
-#         for group in tweet_source.collection_names
-#     }
-#     users = [
-#         {
-#             "username": "Andrzej Duda",
-#             "social_group": "Politycy",
-#             "covid_tweet_count": 12,
-#             "average_favourites": 5000,
-#             "most_favourites": 17000,
-#             "average_retweets": 2000,
-#         },
-#         {
-#             "username": "Robert Biedroń",
-#             "social_group": "Politycy",
-#             "covid_tweet_count": 53,
-#             "average_favourites": 800,
-#             "most_favourites": 3000,
-#             "average_retweets": 400,
-#         },
-#         {
-#             "username": "Dorota Gawryluk",
-#             "social_group": "Dziennikarze",
-#             "covid_tweet_count": 102,
-#             "average_favourites": 590,
-#             "most_favourites": 1700,
-#             "average_retweets": 120,
-#         },
-#     ]
-#     return render_template("homepage.html", users=users)
+def run_analysis(analysis_name: str = "user-range", user_groups_name: str = "all", date_from: Optional[str] = None, date_to: Optional[str] = None):
+    tweet_source = get_tweet_source()
+    analysis_name = analyses[analysis_name]()
+    global user_groups
+    groups = [group.name for group in tweet_source.get_user_groups()] if user_groups_name == "all" \
+        else user_groups[user_groups_name]
+    result = analysis_name.run(tweet_source.get_tweets(groups, filter_params=dates_to_mongo_filter(date_from, date_to)))
+    return result
 
 
 @app.route('/', methods=['GET', 'POST'])
 def homepage_view():
+    result = None
     if request.method == 'POST':
-        print(request.form)
-    return render_template("homepage.html", users=[])
+        result = run_analysis(
+            request.form['statistic-type'], request.form['social-group'],
+            request.form['date-from'] or None, request.form['date-to'] or None
+        )
+    return render_template("homepage.html", result=result.render_html() if result else "")
 
 
 @app.route("/user-summary/<username>")
@@ -154,19 +158,6 @@ def tweet_test_view():
     t = get_db()["Lekarze"].find({})[0]["id_str"]
     html = get_embeddable_tweet_html_by_id(t)
     return render_template("tweettest.html", xdd=html)
-
-
-@app.route("/sample_analyisis_example")
-def sample_analyisis_example():
-    tweet_source = get_tweet_source()
-    analysis = TweetsPerDayTrend()
-    user_groups = [next(tweet_source.get_user_groups()).name] # only first one
-    print(user_groups)
-    result = analysis.run(tweet_source.get_tweets(user_groups))
-
-    return render_template(
-        "test_result_render.html", result=result.render_html()
-    )
 
 
 if __name__ == "__main__":

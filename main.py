@@ -32,6 +32,8 @@ def dates_to_mongo_filter(from_date: str, to_date: str):
         date_filter_dict['$gte'] = datetime.strptime(f"{from_date}T00:00:00.000000Z", "%Y-%m-%dT%H:%M:%S.%fZ")
     if to_date:
         date_filter_dict['$lte'] = datetime.strptime(f"{to_date}T23:59:59.999999Z", "%Y-%m-%dT%H:%M:%S.%fZ")
+    if from_date and to_date and from_date > to_date:
+        return {}
     return {
         "created_at": date_filter_dict
     } if date_filter_dict else {}
@@ -138,7 +140,7 @@ def user_tweets_view():
 
 @app.route("/user-tweets/<user_id>")
 def user_tweets_view_selected_user(user_id):
-    pass
+    return render_template("usertweets.html", user=user_id, tweets={})
 
 
 @app.route("/user-tweets/<user_id>/<tweet_id>")

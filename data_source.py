@@ -51,6 +51,7 @@ class TweetSource:
 
 
 TWEET_FIELDS = {
+    'id': ('str', lambda t: t['id_str']),
     'text': ('str', lambda t: t.get('text', t.get('full_text', ''))),
     'created_at': ('datetime64[ns]', lambda t: t['created_at']),
     'user_id': ('int', lambda t: t['user']['id']),

@@ -34,7 +34,7 @@ class TweetsPerDayTrend(Analysis):
         else:
             fig.suptitle('Coronavirus tweets per day')
 
-        return CompositeAnalysisResult(
-            text_analysis=TextAnalysisResult("Współczynnik dopasowania krzywej regresji do punktów: " + str(score)),
-            figure_analysis=FigureAnalysisResult(fig),
-        )
+        return CompositeAnalysisResult(**{
+            'Współczynnik regresji': TextAnalysisResult("Współczynnik dopasowania krzywej regresji do punktów: " + str(score)),
+            'Wykres - ilość tweetów o koronawirusie od dnia': FigureAnalysisResult(fig),
+        })

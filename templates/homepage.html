@@ -57,9 +57,10 @@
 {% block scripts %}
     <script type="text/javascript" charset="utf8">
         $(document).ready(() => {
-            $('#stats').toggleClass("table table-striped table-bordered")
+            let $stats = $('#stats');
+            $stats.toggleClass("table table-striped table-bordered")
             $('#stats thead').toggleClass("thead-dark")
-            let dt = $('#stats').DataTable({
+            let dt = $stats.DataTable({
                 "language": {
                     "processing": "Przetwarzanie...",
                     "search": " Wyszukaj dowolną frazę:",
@@ -84,6 +85,15 @@
                 }
             });
             dt.columns(-1).order("desc").draw()
+            $('#stats thead tr').each(function () {
+                $(this).find('th').eq(0).after('<th>Tweety</th>')
+            })
+            $('#stats tbody tr').each(function () {
+                let $firstCol = $(this).find('th').eq(0)
+                let username = $firstCol.text()
+                $firstCol.html(`<a href="/user-summary/${username}">${username}</a>`)
+                $(this).find('td').eq(0).before(`<td><a href="/user-tweets/${username}">Wyświetl</a></td>`)
+            })
             $('#loading-message').hide()
             $('#form-accept').click(() => $('#loading-message').show())
         });

@@ -8,6 +8,7 @@ from pymongo import MongoClient
 from analyses.most_tweets_per_user import MostTweetsPerUser
 from analyses.tweets_per_day_trend import TweetsPerDayTrend
 from analyses.range_analysis import RangeAnalysis
+from analyses.user_tweets import UserTweets
 from data_source import TweetSource
 
 app = Flask(__name__)
@@ -15,7 +16,8 @@ app = Flask(__name__)
 analyses = {
     "user-range": RangeAnalysis,
     "most-tweet-count": MostTweetsPerUser,
-    "tweets-per-day-trend": TweetsPerDayTrend
+    "tweets-per-day-trend": TweetsPerDayTrend,
+    "user-tweets": UserTweets,
 }
 
 user_groups = {
@@ -32,6 +34,8 @@ def dates_to_mongo_filter(from_date: str, to_date: str):
         date_filter_dict['$gte'] = datetime.strptime(f"{from_date}T00:00:00.000000Z", "%Y-%m-%dT%H:%M:%S.%fZ")
     if to_date:
         date_filter_dict['$lte'] = datetime.strptime(f"{to_date}T23:59:59.999999Z", "%Y-%m-%dT%H:%M:%S.%fZ")
+    if from_date and to_date and from_date > to_date:
+        return {}
     return {
         "created_at": date_filter_dict
     } if date_filter_dict else {}
@@ -75,13 +79,17 @@ def get_embeddable_tweet_html_by_id(tweet_id):
     return r.json()["html"]
 
 
-def run_analysis(analysis_name: str = "user-range", user_groups_name: str = "all", date_from: Optional[str] = None, date_to: Optional[str] = None):
+def run_analysis(analysis_name: str = "user-range", user_groups_name: str = "all", date_from: Optional[str] = None, date_to: Optional[str] = None, **kwargs):
     tweet_source = get_tweet_source()
     analysis_name = analyses[analysis_name]()
     global user_groups
     groups = [group.name for group in tweet_source.get_user_groups()] if user_groups_name == "all" \
         else user_groups[user_groups_name]
-    result = analysis_name.run(tweet_source.get_tweets(groups, filter_params=dates_to_mongo_filter(date_from, date_to)))
+    filter_dict = dates_to_mongo_filter(date_from, date_to)
+    if 'username' in kwargs:
+        filter_dict['user.name'] = kwargs['username']
+    print('\n', filter_dict, '\n')
+    result = analysis_name.run(tweet_source.get_tweets(groups, filter_params=filter_dict))
     return result
 
 
@@ -112,38 +120,25 @@ def user_summary(username):
     return render_template("user-summary.html", user=username, summary=summary)
 
 
-@app.route("/user-tweets")
-def user_tweets_view():
-    tweets = [
-        {
-            "date_published": "2020-01-09",
-            "text": "Głosuję na prezydenta Dudę prawdziwego prezydenta, nie lubię opozycji",
-        },
-        {
-            "date_published": "2020-01-10",
-            "text": "A nie jednak nie lubię prezydenta Dudy  nie głosuję na niego",
-        },
-        {
-            "date_published": "2020-01-11",
-            "text": "Nie wiem na kogo głosować mam gdzieś te wybory",
-        },
-    ]
-    embed_tweet_html = get_embeddable_tweet_html_by_id(
-        get_db()["Lekarze"].find({})[2]["id_str"]
-    )
-    return render_template(
-        "usertweets.html", tweets=tweets, embedded_tweet=embed_tweet_html
-    )
-
-
 @app.route("/user-tweets/<user_id>")
 def user_tweets_view_selected_user(user_id):
-    pass
+    return render_template("usertweets.html",
+                           user=user_id,
+                           tweets_table=run_analysis(analysis_name='user-tweets',
+                                                     username=user_id,
+                                                     date_from=request.values.get('date-from', None),
+                                                     date_to=request.values.get('date-to', None)).render_html())
 
 
 @app.route("/user-tweets/<user_id>/<tweet_id>")
 def user_tweets_view_selected_tweet(user_id, tweet_id):
-    pass
+    return render_template("usertweets.html",
+                           user=user_id,
+                           embedded_tweet=get_embeddable_tweet_html_by_id(tweet_id),
+                           tweets_table=run_analysis(analysis_name='user-tweets',
+                                                     username=user_id,
+                                                     date_from=request.values.get('date-from', None),
+                                                     date_to=request.values.get('date-to', None)).render_html())
 
 
 @app.route("/user-groups")

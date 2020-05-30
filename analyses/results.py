@@ -1,7 +1,6 @@
 import abc
 import base64
 from io import BytesIO
-from typing import Dict
 
 import flask
 import pandas as pd
@@ -51,17 +50,8 @@ class CompositeAnalysisResult(AnalysisResult):
     def _render_analysis_item(title: str, result: AnalysisResult):
         escaped_title = flask.escape(title)
         rendered_result = result.render_html()
-        return f"<h2>{CompositeAnalysisResult.to_human_readable_name(escaped_title)}</h2>" \
+        return f"<h2>{escaped_title}</h2>" \
                f"<section>{rendered_result}</section>"
-
-    @staticmethod
-    def to_human_readable_name(escaped_title):
-        names = {
-            "dataframe_analysis": "Tabela wyników analizy",
-            "figure_analysis": "Wykres wyników analizy",
-            "text_analysis": "Opis tekstowy wyników analizy"
-        }
-        return names[escaped_title]
 
 
 class DataFrameAnalysisResult(AnalysisResult):

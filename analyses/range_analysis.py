@@ -40,10 +40,10 @@ class RangeAnalysis(Analysis):
         top_n_range.plot(ax=ax, y='Współczynnik zasięgu', kind="bar", figsize=(16, 9))
         # return DataFrameAnalysisResult(range_frame)
 
-        return CompositeAnalysisResult(
-            dataframe_analysis=DataFrameAnalysisResult(range_frame),
-            figure_analysis=FigureAnalysisResult(fig)
-        )
+        return CompositeAnalysisResult(**{
+            'Wyniki analizy': DataFrameAnalysisResult(range_frame),
+            'Wykres': FigureAnalysisResult(fig)
+        })
 
     def calculate_range(self, range_frame):
         total_range = range_frame["Liczba tweetów"] * 0

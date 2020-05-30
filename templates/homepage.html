@@ -92,7 +92,7 @@
                 let $firstCol = $(this).find('th').eq(0)
                 let username = $firstCol.text()
                 $firstCol.html(`<a href="/user-summary/${username}">${username}</a>`)
-                $(this).find('td').eq(0).before(`<td><a href="/user-tweets/${username}">Wyświetl</td>`)
+                $(this).find('td').eq(0).before(`<td><a href="/user-tweets/${username}">Wyświetl</a></td>`)
             })
             $('#loading-message').hide()
             $('#form-accept').click(() => $('#loading-message').show())

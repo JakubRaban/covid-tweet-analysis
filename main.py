@@ -22,6 +22,8 @@ analyses = {
 
 user_groups = {
     "politicians": ["Inni_Politycy", "KO", "Konfederacja", "Lewica", "PIS", "PSL_Kukiz"],
+    "oposition": ["Inni_Politycy", "KO", "Konfederacja", "Lewica" "PSL_Kukiz"],
+    "government": ["PIS"],
     "influencers": ["Influencerzy"],
     "doctors": ["Lekarze"],
     "journalists": ["Dziennikarze"],

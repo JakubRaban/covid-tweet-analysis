@@ -24,10 +24,13 @@ class TweetsPerDayTrend(Analysis):
         trend = model.predict
 
         fig = plt.figure()
-        plt.scatter(tweets_per_day[['index']], tweets_per_day[['text']], color="red")
+        plt.scatter(tweets_per_day.index, tweets_per_day[['text']], color="red")
+        plt.xticks(rotation=90)
         plt.plot(tweets_per_day[['index']], trend(tweets_per_day[['index']]))
         plt.xlabel('days')
         plt.ylabel('tweets')
+
+        fig.subplots_adjust(bottom=0.25)
 
         if 'user' in self.params:
             fig.suptitle(self.params['user'] + ' tweets per day')

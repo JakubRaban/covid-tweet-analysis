@@ -7,6 +7,7 @@ from pymongo import MongoClient
 
 from analyses.most_tweets_per_user import MostTweetsPerUser
 from analyses.tweets_per_day_trend import TweetsPerDayTrend
+from analyses.followers_trend import FollowersTrend
 from analyses.range_analysis import RangeAnalysis
 from analyses.user_tweets import UserTweets
 from data_source import TweetSource
@@ -18,6 +19,7 @@ analyses = {
     "most-tweet-count": MostTweetsPerUser,
     "tweets-per-day-trend": TweetsPerDayTrend,
     "user-tweets": UserTweets,
+    "user-followers": FollowersTrend
 }
 
 user_groups = {

@@ -65,16 +65,16 @@ class RangeAnalysis(Analysis):
         range_frame['Współczynnik zasięgu'] = self.calculate_range(range_frame)
         range_frame = range_frame.sort_values('Współczynnik zasięgu', ascending=False)
 
-        # top_n_range = range_frame.sort_values('Współczynnik zasięgu', ascending=False).head(self.to_plot_amount)
-        # fig, ax = plt.subplots()
-        # top_n_range.plot(ax=ax, y='Współczynnik zasięgu', kind="bar", figsize=(16, 9))
-        #
-        # fig.subplots_adjust(bottom=0.3)
+        top_n_range = range_frame.sort_values('Współczynnik zasięgu', ascending=False).head(self.to_plot_amount)
+        fig, ax = plt.subplots()
+        top_n_range.plot(ax=ax, y='Współczynnik zasięgu', kind="bar", figsize=(16, 9))
+
+        fig.subplots_adjust(bottom=0.3)
         # return DataFrameAnalysisResult(range_frame)
 
         return CompositeAnalysisResult(**{
             'Wyniki analizy': DataFrameAnalysisResult(range_frame),
-            # 'Wykres': FigureAnalysisResult(fig)
+            'Wykres': FigureAnalysisResult(fig)
         })
 
     def calculate_range(self, range_frame):

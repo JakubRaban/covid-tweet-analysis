@@ -8,6 +8,7 @@ from pymongo import MongoClient
 from analyses.analysis_5g import Analysis5g
 from analyses.most_tweets_per_user import MostTweetsPerUser
 from analyses.tweets_per_day_trend import TweetsPerDayTrend
+from analyses.followers_trend import FollowersTrend
 from analyses.range_analysis import RangeAnalysis
 from analyses.user_summary import UserSummary
 from analyses.user_tweets import UserTweets
@@ -20,6 +21,7 @@ analyses = {
     "most-tweet-count": MostTweetsPerUser,
     "tweets-per-day-trend": TweetsPerDayTrend,
     "user-tweets": UserTweets,
+    "user-followers": FollowersTrend
     "5G-percentage": Analysis5g
 }
 

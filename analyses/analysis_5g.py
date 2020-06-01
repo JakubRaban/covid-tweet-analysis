@@ -5,7 +5,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
-class RangeAnalysis(Analysis):
+class Analysis5g(Analysis):
     def run(self, tweets: Tweets) -> AnalysisResult:
         data = tweets.to_data_frame()
         total_tweets=data.shape[0]
@@ -16,5 +16,5 @@ class RangeAnalysis(Analysis):
         tweets_with_5g_percent = (tweets_with_5g_num/total_tweets)*100
 
         return CompositeAnalysisResult(
-            text_analysis=TextAnalysisResult(str(round(tweets_with_5g_percent, 2)) + "%"),
+            text_analysis=TextAnalysisResult("Tweety zawierajce informacje o 5g" + str(round(tweets_with_5g_percent, 2)) + "%"),
         )

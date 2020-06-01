@@ -8,8 +8,8 @@ import matplotlib.pyplot as plt
 class RangeAnalysis(Analysis):
     def __init__(self, weights=None, to_plot_amount=15):
 
-        self.weights = weights or {"Liczba tweetów": 1, "Liczba retweetów": 2,
-                                   "Liczba odpowiedzi": 1, "Ilość śledzących": 1 / 50, "Wspomnienia": 1}
+        self.weights = weights or {"Liczba tweetów": 1, "Liczba retweetów": 24000, # 24k to dolny kwartyl ilosci followerso
+                                   "Liczba odpowiedzi": 24000, "Ilość śledzących": 1 / 50, "Wspomnienia": 1}
         self.to_plot_amount = to_plot_amount
 
     def run(self, tweets: Tweets) -> AnalysisResult:

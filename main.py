@@ -21,8 +21,8 @@ analyses = {
     "most-tweet-count": MostTweetsPerUser,
     "tweets-per-day-trend": TweetsPerDayTrend,
     "user-tweets": UserTweets,
-    "user-followers": FollowersTrend
-    "5G-percentage": Analysis5g
+    "user-followers": FollowersTrend,
+    "5G-percentage": Analysis5g,
 }
 
 user_groups = {
@@ -116,7 +116,16 @@ def user_summary(username):
     tweet_source = get_tweet_source()
     user_summary_analysis = UserSummary(tweet_source, username)
     summary = user_summary_analysis.get_results()
-    return render_template("user-summary.html", user=username, summary=summary)
+
+    trend_analysis = TweetsPerDayTrend(user=username)
+    trend_analysis_result = trend_analysis.run(tweet_source.get_tweets(user_summary_analysis.collections))
+
+    return render_template(
+        "user-summary.html",
+        user=username,
+        summary=summary,
+        trend_analysis_result=trend_analysis_result.render_html()
+    )
 
 
 @app.route("/user-tweets/<user_id>")

@@ -18,6 +18,7 @@ analyses = {
     "most-tweet-count": MostTweetsPerUser,
     "tweets-per-day-trend": TweetsPerDayTrend,
     "user-tweets": UserTweets,
+    "5G-percentage": Analysis5g
 }
 
 user_groups = {

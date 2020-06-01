@@ -5,6 +5,7 @@ import requests
 from flask import Flask, render_template, g, request
 from pymongo import MongoClient
 
+from analyses.analysis_5g import Analysis5g
 from analyses.most_tweets_per_user import MostTweetsPerUser
 from analyses.tweets_per_day_trend import TweetsPerDayTrend
 from analyses.range_analysis import RangeAnalysis

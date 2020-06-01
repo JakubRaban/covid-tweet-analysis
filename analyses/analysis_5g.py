@@ -15,6 +15,6 @@ class Analysis5g(Analysis):
         tweets_with_5g_num = tweets_with_5g.shape[0]
         tweets_with_5g_percent = (tweets_with_5g_num/total_tweets)*100
 
-        return CompositeAnalysisResult(
-            text_analysis=TextAnalysisResult("Tweety zawierajce informacje o 5g" + str(round(tweets_with_5g_percent, 2)) + "%"),
-        )
+        return CompositeAnalysisResult(**{
+            'Wynik analizy': TextAnalysisResult("Tweety zawierajce informacje o 5G: " + str(round(tweets_with_5g_percent, 2)) + "%"),
+        })

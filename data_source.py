@@ -21,6 +21,9 @@ class Tweets:
             name: pd.Series(values, dtype=TWEET_FIELDS[name][0]) for name, values in series.items()
         })
 
+    def __bool__(self):
+        return bool(self._data_iterator)
+
 
 UserGroup = NamedTuple('UserGroup', (('name', str), ('users', Iterable[str]), ('description', str)))
 
@@ -69,7 +72,8 @@ TWEET_FIELDS = {
     'mentions_names': (
         'str',
         lambda t: ';'.join(e['name'] or '' for e in t['entities']['user_mentions'])
-    )
+    ),
+    'is_retweet': ('bool', lambda t: 'retweeted_status' in t)
 }
 
 

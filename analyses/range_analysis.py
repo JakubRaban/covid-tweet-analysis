@@ -7,10 +7,9 @@ import matplotlib.pyplot as plt
 
 class RangeAnalysis(Analysis):
     def __init__(self, weights=None, to_plot_amount=15):
-        if not weights:
-            self.weights = {"tweets": 1, "retweets": 2000, "replies": 1000, "followers": 1 / 50, "mentions": 1}
-        else:
-            self.weights = weights
+
+        self.weights = weights or {"Liczba tweetów": 1, "Liczba retweetów": 2,
+                                   "Liczba odpowiedzi": 1, "Ilość śledzących": 1 / 50, "Wspomnienia": 1}
         self.to_plot_amount = to_plot_amount
 
     def run(self, tweets: Tweets) -> AnalysisResult:
@@ -40,7 +39,7 @@ class RangeAnalysis(Analysis):
 
         for user, mentions in user_dict.items():
             mentions_df_dict['user'].append(user)
-            mentions_df_dict['mentions'].append(user)
+            mentions_df_dict['mentions'].append(mentions)
         mentions_per_user_df = pd.DataFrame(mentions_df_dict)
         mentions_per_user_df = mentions_per_user_df.groupby('user').sum()
         mentions_per_user_df = mentions_per_user_df['mentions']
@@ -54,31 +53,36 @@ class RangeAnalysis(Analysis):
 
         reply_sum_per_user = grouped_by_name['reply_count']
 
-        range_dict = {'tweets': tweets_per_user,
-                      'retweets' : retweets_per_user,
-                      'replies': reply_sum_per_user,
-                      'followers': followers_per_user,
-                      'mentions': mentions_per_user_df}
+
+        range_dict = {'Liczba tweetów': tweets_per_user,
+                      'Liczba retweetów': retweets_per_user,
+                      'Liczba odpowiedzi': reply_sum_per_user,
+                      'Ilość śledzących': followers_per_user,
+                        'Wspomnienia': mentions_per_user_df
+                      }
 
         range_frame = pd.DataFrame(range_dict)
-        range_frame['total_range'] = self.calculate_range(range_frame)
-        range_frame = range_frame.sort_values('total_range', ascending=False)
+        range_frame['Współczynnik zasięgu'] = self.calculate_range(range_frame)
+        range_frame = range_frame.sort_values('Współczynnik zasięgu', ascending=False)
 
-        top_n_range = range_frame.sort_values('total_range', ascending=False).head(self.to_plot_amount)
+        top_n_range = range_frame.sort_values('Współczynnik zasięgu', ascending=False).head(self.to_plot_amount)
         fig, ax = plt.subplots()
-        top_n_range.plot(ax=ax, y='total_range', kind="bar", figsize=(16, 9))
+        top_n_range.plot(ax=ax, y='Współczynnik zasięgu', kind="bar", figsize=(16, 9))
+
+        fig.subplots_adjust(bottom=0.3)
         # return DataFrameAnalysisResult(range_frame)
 
-        return CompositeAnalysisResult(
-            dataframe_analysis=DataFrameAnalysisResult(range_frame),
-            figure_analysis=FigureAnalysisResult(fig)
-        )
+        return CompositeAnalysisResult(**{
+            'Wyniki analizy': DataFrameAnalysisResult(range_frame),
+            'Wykres': FigureAnalysisResult(fig)
+        })
 
     def calculate_range(self, range_frame):
-        total_range = range_frame["tweets"] * 0
+        total_range = range_frame["Liczba tweetów"] * 0
         for key, value in self.weights.items():
-            if key == "tweets":
-                total_range += range_frame[key] * value * range_frame["followers"]
+
+            if key == "Liczba tweetów":
+                total_range += range_frame[key] * value * range_frame["Ilość śledzących"]
             else:
                 total_range += range_frame[key]
         return total_range

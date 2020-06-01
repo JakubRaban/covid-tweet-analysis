@@ -9,8 +9,9 @@ class MostTweetsPerUser(Analysis):
         if 'top' in self.params:
             tweets_number = data.groupby('user_name').count()['text'].\
                 sort_values(ascending=False).\
-                head(self.params['top']).\
-                reset_index()
+                head(self.params['top'])
         else:
-            tweets_number = data.groupby('user_name').count()['text'].sort_values(ascending=False).reset_index()
+            tweets_number = data.groupby('user_name').count()['text'].sort_values(ascending=False)
+        tweets_number = tweets_number.to_frame()
+        tweets_number.columns = ["Ilość tweetów"]
         return DataFrameAnalysisResult(tweets_number)

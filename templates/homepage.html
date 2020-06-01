@@ -21,9 +21,11 @@
                         <div class="col form-group">
                             <label for="social-group">Grupa społeczna</label>
                             <select class="form-control" id="social-group" name="social-group">
-                                <option value="none">(Dowolna)</option>
+                                <option value="all">(Dowolna)</option>
                                 <option value="politicians">Politycy</option>
                                 <option value="influencers">Influencerzy</option>
+                                <option value="oposition">Opozycja</option>
+                                <option value="government">Partia rządząca</option>
                                 <option value="doctors">Lekarze</option>
                                 <option value="journalists">Dziennikarze</option>
                             </select>
@@ -33,52 +35,45 @@
                         <div class="col form-group">
                             <label for="statistic-type">Rodzaj statystyki</label>
                             <select class="form-control" id="statistic-type" name="statistic-type">
-                                <option value="general">Ogólna</option>
-                                <option value="popularity">Zasięg użytkownika</option>
-                                <option value="social-group">Grupa społeczna</option>
-                                <option value="conspiracy">Teorie spiskowe</option>
+                                <option value="user-range">Zasięg użytkowników</option>
+                                <option value="most-tweet-count">Ilość tweetów użytkowników</option>
+                                <option value="tweets-per-day-trend">Trend tweetów w czasie</option>
                             </select>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Zatwierdź</button>
+                    <button type="submit" class="btn btn-primary" id="form-accept">Zatwierdź</button>
                 </div>
             </form>
         </div>
     </div>
+    <div class="container-xl" id="loading-message">
+        <div class="jumbotron">
+            <h2 style="text-align: center">Obliczenia w trakcie...</h2>
+        </div>
+    </div>
     <div class="container-fluid">
-        <table class="table table-striped table-bordered" id="datatable-users">
-            <thead class="thead-dark">
-            <tr>
-                <th scope="col">Użytkownik</th>
-                <th scope="col">Grupa społeczna</th>
-                <th scope="col"># tweetów o COVID</th>
-                <th scope="col">Średnio polubień</th>
-                <th scope="col">Maksymalnie polubień</th>
-                <th scope="col">Średnio retweetów</th>
-                <th scope="col">Tweety</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for user in users %}
-                <tr>
-                    <th scope="row"><a href="#">{{ user["username"] }}</a></th>
-                    <th scope="row"><a href="#">{{ user["social_group"] }}</a></th>
-                    <th scope="row">{{ user["covid_tweet_count"] }}</th>
-                    <th scope="row">{{ user["average_favourites"] }}</th>
-                    <th scope="row">{{ user["most_favourites"] }}</th>
-                    <th scope="row">{{ user["average_retweets"] }}</th>
-                    <th scope="row"><a href="#">Zobacz</a></th>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+        {{ result|safe }}
     </div>
 {% endblock %}
 
 {% block scripts %}
     <script type="text/javascript" charset="utf8">
         $(document).ready(() => {
-            $('#datatable-users').DataTable({
+            let $stats = $('#stats');
+            $stats.toggleClass("table table-striped table-bordered")
+            $('#stats thead').toggleClass("thead-dark")
+            $('#stats thead tr').each(function () {
+                $(this).find('th').eq(0).after('<th>Tweety</th>')
+            })
+            $('#stats tbody tr').each(function () {
+                let $firstCol = $(this).find('th').eq(0)
+                let username = $firstCol.text()
+                $firstCol.html(`<a href="/user-summary/${username}">${username}</a>`)
+                $(this).find('td').eq(0).before(`<td><a href="/user-tweets/${username}">Wyświetl</a></td>`)
+            })
+            $('#loading-message').hide()
+            $('#form-accept').click(() => $('#loading-message').show())
+            let dt = $stats.DataTable({
                 "language": {
                     "processing": "Przetwarzanie...",
                     "search": " Wyszukaj dowolną frazę:",
@@ -102,6 +97,7 @@
                     }
                 }
             });
+            dt.columns(-1).order("desc").draw()
         });
     </script>
 {% endblock %}

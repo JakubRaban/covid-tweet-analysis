@@ -1,7 +1,6 @@
 import abc
 import base64
 from io import BytesIO
-from typing import Dict
 
 import flask
 import pandas as pd
@@ -51,7 +50,8 @@ class CompositeAnalysisResult(AnalysisResult):
     def _render_analysis_item(title: str, result: AnalysisResult):
         escaped_title = flask.escape(title)
         rendered_result = result.render_html()
-        return f"<h2>{escaped_title}</h2><section>{rendered_result}</section>"
+        return f"<h2>{escaped_title}</h2>" \
+               f"<section>{rendered_result}</section>"
 
 
 class DataFrameAnalysisResult(AnalysisResult):
@@ -62,7 +62,7 @@ class DataFrameAnalysisResult(AnalysisResult):
         self._dataframe = dataframe
 
     def render_html(self) -> str:
-        return self._dataframe.to_html()
+        return self._dataframe.to_html(table_id='stats')
 
 
 class FigureAnalysisResult(AnalysisResult):
@@ -76,4 +76,4 @@ class FigureAnalysisResult(AnalysisResult):
         buffer = BytesIO()
         self._figure.savefig(buffer, format="png")
         data = base64.b64encode(buffer.getbuffer()).decode("ascii")
-        return f"<img src='data:image/png;base64,{data}'> /"
+        return f"<img src='data:image/png;base64,{data}'>"

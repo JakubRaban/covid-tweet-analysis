@@ -50,9 +50,20 @@
             let $stats = $('#stats');
             $stats.toggleClass("table table-striped table-bordered")
             $('#stats thead').toggleClass("thead-dark")
+            $('#stats thead tr').each(function () {
+                $(this).find('th:lt(2)').remove()
+            })
+            $('#stats tbody tr').each(function () {
+                $(this).find('th').eq(0).remove()
+                let $columns = $(this).find('td')
+                let tweetId = $columns.eq(0).text()
+                let tweetText = $columns.eq(1).text()
+                $columns.eq(1).html(`<a href="/user-tweets/{{ user }}/${tweetId}">${tweetText}</a>`)
+                $columns.eq(0).remove()
+            })
             let dt = $stats.DataTable({
                 "language": {
-                    "processing": "Przetwarzanie...",
+                   "processing": "Przetwarzanie...",
                     "search": " Wyszukaj dowolną frazę:",
                     "lengthMenu": "Pokaż _MENU_ pozycji",
                     "info": "Pozycje od _START_ do _END_ z _TOTAL_ łącznie",
@@ -75,17 +86,6 @@
                 }
             });
             dt.columns(-1).order("desc").draw()
-            $('#stats thead tr').each(function () {
-                $(this).find('th:lt(2)').remove()
-            })
-            $('#stats tbody tr').each(function () {
-                $(this).find('th').eq(0).remove()
-                let $columns = $(this).find('td')
-                let tweetId = $columns.eq(0).text()
-                let tweetText = $columns.eq(1).text()
-                $columns.eq(1).html(`<a href="/user-tweets/{{ user }}/${tweetId}">${tweetText}</a>`)
-                $columns.eq(0).remove()
-            })
         });
     </script>
 {% endblock %}

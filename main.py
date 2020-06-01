@@ -9,6 +9,7 @@ from analyses.analysis_5g import Analysis5g
 from analyses.most_tweets_per_user import MostTweetsPerUser
 from analyses.tweets_per_day_trend import TweetsPerDayTrend
 from analyses.range_analysis import RangeAnalysis
+from analyses.user_summary import UserSummary
 from analyses.user_tweets import UserTweets
 from data_source import TweetSource
 
@@ -110,17 +111,9 @@ def homepage_view():
 
 @app.route("/user-summary/<username>")
 def user_summary(username):
-    summary = {
-        "Grupa społeczna": "politycy",
-        "Tweety o koronawirusie": 123,
-        "Retweetowane": 23,
-        "Własne tweety": 100,
-        "Średnia ilość polubień": 67,
-        "Średnia ilość retweetów": 23,
-        "Najwięcej polubień": 249,
-        "Najwięcej retweetów": 35,
-    }
-
+    tweet_source = get_tweet_source()
+    user_summary_analysis = UserSummary(tweet_source, username)
+    summary = user_summary_analysis.get_results()
     return render_template("user-summary.html", user=username, summary=summary)
 
 

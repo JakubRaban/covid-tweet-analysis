@@ -21,6 +21,9 @@ class Tweets:
             name: pd.Series(values, dtype=TWEET_FIELDS[name][0]) for name, values in series.items()
         })
 
+    def __bool__(self):
+        return bool(self._data_iterator)
+
 
 UserGroup = NamedTuple('UserGroup', (('name', str), ('users', Iterable[str]), ('description', str)))
 

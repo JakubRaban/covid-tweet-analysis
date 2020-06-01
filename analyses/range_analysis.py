@@ -39,7 +39,7 @@ class RangeAnalysis(Analysis):
 
         for user, mentions in user_dict.items():
             mentions_df_dict['user'].append(user)
-            mentions_df_dict['mentions'].append(user)
+            mentions_df_dict['mentions'].append(mentions)
         mentions_per_user_df = pd.DataFrame(mentions_df_dict)
         mentions_per_user_df = mentions_per_user_df.groupby('user').sum()
         mentions_per_user_df = mentions_per_user_df['mentions']

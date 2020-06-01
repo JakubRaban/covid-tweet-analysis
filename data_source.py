@@ -72,7 +72,8 @@ TWEET_FIELDS = {
     'mentions_names': (
         'str',
         lambda t: ';'.join(e['name'] or '' for e in t['entities']['user_mentions'])
-    )
+    ),
+    'is_retweet': ('bool', lambda t: 'retweeted_status' in t)
 }
 
 

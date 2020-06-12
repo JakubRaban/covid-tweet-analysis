@@ -1,0 +1,24 @@
+version: '3.3'
+services:
+  db:
+    build: ./mongo
+    restart: always
+    environment:
+      MONGO_INITDB_DATABASE: tweets
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: rootpassword
+    volumes:
+      - ./mongo/data:/data/db
+  web:
+    build: .
+    ports:
+      - 5000:5000
+    command: pipenv run python -u main.py
+    environment:
+      FLASK_DEBUG: 1
+      PYTHONUNBUFFERED: 1
+    depends_on:
+      - db
+    volumes:
+      - .:/code
+    restart: always

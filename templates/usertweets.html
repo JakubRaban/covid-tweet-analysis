@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block title %}Tweety użytkownika{% endblock %}
+{% block content %}
+    <h2 class="text-center mt-4 mb-3 font-weight-bold">
+        Tweety użytkownika {{ user }}
+    </h2>
+    <div class="container-xl p-3">
+        <div class="container border p-3">
+            <h3>Wyszukaj tweeta</h3>
+            <form>
+                <div class="container">
+                    <h5>Zakres dat</h5>
+                    <div class="row">
+                        <div class="col form-group">
+                            <label for="date-from">Od</label>
+                            <input type="date" class="form-control" id="date-from" name="date-from">
+                        </div>
+                        <div class="col form-group">
+                            <label for="date-to">Do</label>
+                            <input type="date" class="form-control" id="date-to" name="date-to">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Zatwierdź</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-8 pt-4">
+                {{ tweets_table|safe }}
+            </div>
+            <div class="col-sm-4">
+                <div class="d-flex justify-content-center">
+                    {% if embedded_tweet %}
+                        {{ embedded_tweet|safe }}
+                    {% else %}
+                        <div class="jumbotron">
+                            <h3 style="text-align: center">Wybierz tweeta z listy aby wyświetlić jego treść i dane</h3>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+    <script type="text/javascript" charset="utf8">
+        $(document).ready(() => {
+            let $stats = $('#stats');
+            $stats.toggleClass("table table-striped table-bordered")
+            $('#stats thead').toggleClass("thead-dark")
+            $('#stats thead tr').each(function () {
+                $(this).find('th:lt(2)').remove()
+            })
+            $('#stats tbody tr').each(function () {
+                $(this).find('th').eq(0).remove()
+                let $columns = $(this).find('td')
+                let tweetId = $columns.eq(0).text()
+                let tweetText = $columns.eq(1).text()
+                $columns.eq(1).html(`<a href="/user-tweets/{{ user }}/${tweetId}">${tweetText}</a>`)
+                $columns.eq(0).remove()
+            })
+            let dt = $stats.DataTable({
+                "language": {
+                   "processing": "Przetwarzanie...",
+                    "search": " Wyszukaj dowolną frazę:",
+                    "lengthMenu": "Pokaż _MENU_ pozycji",
+                    "info": "Pozycje od _START_ do _END_ z _TOTAL_ łącznie",
+                    "infoEmpty": "Pozycji 0 z 0 dostępnych",
+                    "infoFiltered": "(filtrowanie spośród _MAX_ dostępnych pozycji)",
+                    "infoPostFix": "",
+                    "loadingRecords": "Wczytywanie...",
+                    "zeroRecords": "Nie znaleziono pasujących pozycji",
+                    "emptyTable": "Brak danych",
+                    "paginate": {
+                        "first": "Pierwsza",
+                        "previous": "Poprzednia",
+                        "next": "Następna",
+                        "last": "Ostatnia"
+                    },
+                    "aria": {
+                        "sortAscending": ": aktywuj, by posortować kolumnę rosnąco",
+                        "sortDescending": ": aktywuj, by posortować kolumnę malejąco"
+                    }
+                }
+            });
+            dt.columns(-1).order("desc").draw()
+        });
+    </script>
+{% endblock %}

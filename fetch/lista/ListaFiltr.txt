@@ -1,0 +1,41 @@
+# posłowie
+# PIS
+(from:pisorgpl OR from:AMAdamczyk OR from:Andruszkiewicz1 OR from:BartosikRyszard OR from:JerzyBielecki2 OR from:mblaszczak OR from:BorowiakJoanna OR from:KamilBortniczuk OR from:BorysSzopa) lang:pl koronawirus
+(from:BurzynskaLidia OR from:PCzarnecki83 OR from:CzarneckiWIT0LD OR from:CzarnekP OR from:RzecznikPiS OR from:l_dobrzynski OR from:DrabekBB OR from:michaldworczyk OR from:JEmilewicz) lang:pl koronawirus
+(from:PiotrGlinski OR from:MMGosiewska OR from:Jaroslaw_Gowin OR from:GutMostowy OR from:mhorala OR from:PHreniak OR from:FilipKaczynski OR from:piotr_kaleta_ OR from:sjkaleta) lang:pl koronawirus
+(from:KrajewskiWies OR from:MartaKubiak8 OR from:JacekKurzepa OR from:Anna1Kwiecien OR from:KwitelMarek OR from:JoannaLichocka OR from:lisieckipawel OR from:MarzenaMachalek) lang:pl koronawirus
+(from:BeataPielucha OR from:IwonaMichalek OR from:a_milczanowska OR from:MosinskiJan OR from:arekmularczyk OR from:PiotrMuller OR from:wmurdzek OR from:OzdobaJacek OR from:waldemar_buda) lang:pl koronawirus
+(from:AnnaPaluchSejm OR from:D_Piontkowski OR from:V_Porowska OR from:RauZbigniew OR from:UrszulaRusecka OR from:PiotrSak5 OR from:SasinJacek OR from:radekfogiel OR from:AnnaGembicka) lang:pl koronawirus
+(from:m_kaluzny OR from:JKowalski_posel OR from:Macierewicz_A OR from:malecki_m) lang:pl koronawirus
+# KO  OR from:barbaraanowacka
+(from:UrszulaAugustyn OR from:piotr_borys OR from:bbudka OR from:ZofiaCzernow OR from:FiliksMagdalena OR from:KonradFrysztak OR from:AGajewska OR from:gajewska_kinga OR from:gapinska_e) lang:pl koronawirus
+(from:c_grabarczyk OR from:JanGrabiec OR from:hennigkloska OR from:JarosMichal OR from:M_K_Blonska OR from:MKierwinski OR from:krawczyk_michal OR from:MarekKrzakala OR from:LasekMaciej) lang:pl koronawirus
+(from:ArturLacki OR from:LoskoMagdalena OR from:A_Marchewka OR from:JagnaMarczulajt OR from:OlekMiszalski OR from:ArkadiuszMyrcha OR from:DorotaNiedziela OR from:SlawomirNitras) lang:pl koronawirus
+(from:pomaska OR from:PawelPoncyljusz OR from:jacek_protas OR from:moanrosa OR from:DariuszRosati OR from:WojciechSaluga OR from:SchetynadlaPO OR from:ikatarasinska OR from:MGolbik OR from:KLubnauer) lang:pl koronawirus
+# Lewica
+(from:KGawkowski OR from:m_gdula OR from:HannaGillPiatek OR from:dgpopiolek OR from:KopiecMaciej OR from:KotulaKat OR from:KretkowskaK OR from:KrutulPawel OR from:AnitaKDZG OR from:MarcinKulasek) lang:pl koronawirus
+(from:KwiatkowskiRob OR from:B_Maciejewska OR from:WandaNowicka OR from:ObazRobert2 OR from:pawlowska_pl OR from:ARozenek OR from:MarekRutka OR from:K_Smiszek OR from:wieczorekdarek OR from:mmzawisza) lang:pl koronawirus
+# Koalicja PSL-Kukiz
+(from:GrzybAndrzej OR from:DariuszKlimczak OR from:KosiniakKamysz OR from:StefanKrajewski OR from:lubczyk_radek) lang:pl koronawirus
+(from:JanekLopata OR from:UNowogorska OR from:KrzysztofPaszyk OR from:ProtasiewiczJ OR from:SawickiMarek OR from:PZgorzelskiP) lang:pl koronawirus
+# Konfederacja
+(from:KonradBerkowicz OR from:krzysztofbosak OR from:GrzegorzBraun_ OR from:ArturDziambor OR from:JkmMikke OR from:urbaniak_michal) lang:pl koronawirus
+# Inni
+(from:sikorskiradek OR from:szymon_holownia OR from:GiertychRoman OR from:prezydentpl) lang:pl koronawirus
+# dziennikarze
+(from:hannawawrowska OR from:wozpiotr OR from:KarolinaEKowal1 OR from:DSubbotko OR from:piotrbratkowsk1 OR from:Walewski_P OR from:marek_kozubal OR from:kowalewski07 OR from:JolantaOjczyk) lang:pl koronawirus
+(from:SwiniarskiP OR from:PiotrWolosik OR from:estera_flieger OR from:MrowickiRafal OR from:_ZajacPiotr OR from:WitoldUrbanowic OR from:EwaBugala OR from:woj_raf OR from:piotrdrabik) lang:pl koronawirus
+(from:jzpinski OR from:Olo_Gurgul OR from:PawlowskiJakub OR from:CezOlbrycht OR from:P_Bednarz OR from:Olejarczyk_Onet OR from:gabbsby OR from:BartG_ski OR from:robert_silski) lang:pl koronawirus
+(from:OrchowskiThomas OR from:Karol_Gac OR from:Karol_Gac OR from:Kolodziejski_ OR from:gospoprostu OR from:adamskilukasz1 OR from:KOsiejuk OR from:KarolKanski OR from:Bart_Wielinski) lang:pl koronawirus
+(from:magda_razem OR from:MForSud OR from:d_kossakowska OR from:zuzanna_dab OR from:mrowka_k OR from:ArturStelmasiak OR from:JoannaRadio OR from:bartoshchyz OR from:GrzeJasinski) lang:pl koronawirus
+(from:WBiedron OR from:pijawor OR from:EwaZajaczkowska OR from:L_Szpyrka OR from:BartoszWojsa OR from:WMarchewczyk OR from:mwpotocki OR from:ARatusznik OR from:JakubNizinski OR from:gazetapl_news) lang:pl koronawirus
+(from:gazeta_wyborcza OR from:GPtygodnik OR from:Dziennik_N OR from:zachodni OR from:DziennikLublin OR from:PR24_pl OR from:TygodnikWPROST OR from:Polityka_pl OR from:24tp_pl OR from:Tygodnik_Sieci) lang:pl koronawirus
+(from:Tysol OR from:TygodnikTVP OR from:RMF24pl OR from:FAKT24PL OR from:DoRzeczy_pl OR from:lis_tomasz OR from:cezarygmyz OR from:lkwarzecha OR from:bweglarczyk OR from:sekielski) lang:pl koronawirus
+(from:r_klonowski OR from:magdalenazbylu1 OR from:kamil_zatonski OR from:JacekKarnowski OR from:MR_Minela_20) lang:pl koronawirus
+# lekarze i tego typu
+(from:damian_patecki OR from:JaBilinski OR from:bfialek OR from:kosik_md OR from:churreml OR from:DkorycinskaK OR from:calipso_vera OR from:MZ_GOV_PL OR from:NFZ_Centrala OR from:CowZdrowiu) lang:pl koronawirus
+(from:Rzecznik_GUMed OR from:MariaKlosinska OR from:JadwigaSokolow1 OR from:KatarzynaPikul1 OR from:db_jolanta OR from:PR_OZZL) lang:pl koronawirus
+# organizacje
+# influencerzy i inne różności (jak Boniek, Palikot, Milik)
+(from:Palikot_Janusz OR from:BoniekZibi OR from:JaroslawKuzniar OR from:R_A_Ziemkiewicz OR from:pikus_pol OR from:cezarykrysztopa OR from:katarynaaa OR from:Polsport OR from:wtruszczynska) lang:pl koronawirus
+(from:Wonziu OR from:popydo OR from:przemekspider OR from:robsoniqe OR from:paweltkaczyk OR from:ZbigniewHoldys OR from:TheCejrowski OR from:LukaszBok OR from:totylkoteoria) lang:pl koronawirus

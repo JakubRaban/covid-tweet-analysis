@@ -12,9 +12,22 @@ class Analysis5g(Analysis):
 
         data['text'] = data['text'].str.lower()
         tweets_with_5g = data[data['text'].str.contains("5g")]
-        tweets_with_5g_num = tweets_with_5g.shape[0]
-        tweets_with_5g_percent = (tweets_with_5g_num/total_tweets)*100
+
+        tweets_5g_users = tweets_with_5g.groupby('user_name').count().sort_values("text", ascending=False).head(10)
+        tweets_5g_users = tweets_5g_users[['text']]
+
+        names = [n for n in tweets_5g_users.index]
+        vals = [v for v in tweets_5g_users['text']]
+
+        fig, ax = plt.subplots()
+        ax.bar(names, vals)
+
+        plt.xtics(rotation=90)
+
+        # tweets_with_5g_num = tweets_with_5g.shape[0]
+        # tweets_with_5g_percent = (tweets_with_5g_num/total_tweets)*100
 
         return CompositeAnalysisResult(**{
-            'Wynik analizy': TextAnalysisResult("Tweety zawierajce informacje o 5G: " + str(round(tweets_with_5g_percent, 2)) + "%"),
+            'Wynik analizy': DataFrameAnalysisResult(tweets_5g_users),
+            'Wykres': FigureAnalysisResult(fig)
         })

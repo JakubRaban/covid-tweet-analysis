@@ -22,7 +22,7 @@ class Analysis5g(Analysis):
         fig, ax = plt.subplots()
         ax.bar(names, vals)
 
-        plt.xtics(rotation=90)
+        plt.xticks(rotation=90)
 
         # tweets_with_5g_num = tweets_with_5g.shape[0]
         # tweets_with_5g_percent = (tweets_with_5g_num/total_tweets)*100

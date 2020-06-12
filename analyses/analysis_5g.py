@@ -24,10 +24,11 @@ class Analysis5g(Analysis):
 
         plt.xticks(rotation=90)
 
-        # tweets_with_5g_num = tweets_with_5g.shape[0]
-        # tweets_with_5g_percent = (tweets_with_5g_num/total_tweets)*100
+        tweets_with_5g_num = tweets_with_5g.shape[0]
+        tweets_with_5g_percent = (tweets_with_5g_num/total_tweets)*100
 
         return CompositeAnalysisResult(**{
             'Wynik analizy': DataFrameAnalysisResult(tweets_5g_users),
-            'Wykres': FigureAnalysisResult(fig)
+            'Wykres': FigureAnalysisResult(fig),
+            'Procent tweetow z 5g': str(tweets_with_5g_percent)
         })

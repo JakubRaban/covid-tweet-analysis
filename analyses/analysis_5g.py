@@ -31,5 +31,5 @@ class Analysis5g(Analysis):
         return CompositeAnalysisResult(**{
             'Wynik analizy': DataFrameAnalysisResult(tweets_5g_users),
             'Wykres': FigureAnalysisResult(fig),
-            'Procent tweetow z 5g': TextAnalysisResult(str(tweets_with_5g_percent))
+            'Procent tweetow z 5g': TextAnalysisResult(str(round(tweets_with_5g_percent,2)) +"%")
         })

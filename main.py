@@ -1,5 +1,6 @@
 from datetime import date, datetime
 from typing import Optional
+from os import path
 
 import requests
 from flask import Flask, render_template, g, request
@@ -97,6 +98,7 @@ def run_analysis(analysis_name: str = "user-range", user_groups_name: str = "all
         filter_dict['user.name'] = kwargs['username']
     print('\n', filter_dict, '\n')
     result = analysis_name.run(tweet_source.get_tweets(groups, filter_params=filter_dict))
+    result.export(path.join(path.dirname(__file__), 'results', str(datetime.now()).replace(' ', '_')))
     return result
 
 
@@ -117,7 +119,8 @@ def user_summary(username):
     user_summary_analysis = UserSummary(tweet_source, username)
     summary = user_summary_analysis.get_results()
 
-    trend_analysis = TweetsPerDayTrend(user=username)
+    # trend_analysis = TweetsPerDayTrend(user=username)
+    trend_analysis = FollowersTrend(user=username)
     trend_analysis_result = trend_analysis.run(tweet_source.get_tweets(user_summary_analysis.collections))
 
     return render_template(

@@ -1,6 +1,9 @@
 from analyses import Analysis, AnalysisResult
 from analyses.results import FigureAnalysisResult, TextAnalysisResult, CompositeAnalysisResult
 from sklearn import linear_model
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
+from sklearn.preprocessing import PolynomialFeatures
 from data_source import Tweets
 import matplotlib.pyplot as plt
 
@@ -17,16 +20,19 @@ class TweetsPerDayTrend(Analysis):
         index = [i for i in range(len(tweets_per_day))]
         tweets_per_day['index'] = index
 
+        polynomial_features = PolynomialFeatures(degree=2)
+        x_poly = polynomial_features.fit_transform(tweets_per_day[['index']])
+
         lm = linear_model.LinearRegression()
-        model = lm.fit(tweets_per_day[['index']], tweets_per_day[['text']])
-        score = lm.score(tweets_per_day[['index']], tweets_per_day[['text']])
+        model = lm.fit(x_poly, tweets_per_day[['text']])
+        score = lm.score(x_poly, tweets_per_day[['text']])
 
         trend = model.predict
 
         fig = plt.figure()
         plt.scatter(tweets_per_day.index, tweets_per_day[['text']], color="red")
         plt.xticks(rotation=90)
-        plt.plot(tweets_per_day[['index']], trend(tweets_per_day[['index']]))
+        plt.plot(tweets_per_day[['index']], trend(x_poly))
         plt.xlabel('days')
         plt.ylabel('tweets')
 

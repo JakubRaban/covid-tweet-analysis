@@ -86,7 +86,8 @@ class DataFrameAnalysisResult(AnalysisResult):
 
 class FigureAnalysisResult(AnalysisResult):
     def export(self, path):
-        pass
+        with open(path + '.png', 'wb+') as result_file:
+            self._figure.savefig(result_file, format="png")
 
     def __init__(self, figure: Figure):
         """

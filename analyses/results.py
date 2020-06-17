@@ -18,8 +18,19 @@ class AnalysisResult(abc.ABC):
         :return: Ready to-be-rendered HTML containing analysis result. It is a safe string
         """
 
+    @abc.abstractmethod
+    def export(self, path):
+        """ Exports result to file
+
+        :return:
+        """
+
 
 class TextAnalysisResult(AnalysisResult):
+    def export(self, path):
+        with open(path) as result_file:
+            result_file.write(self._text)
+
     def __init__(self, text: str):
         """
         :param text: Text to be displayed as analysis result
@@ -33,6 +44,10 @@ class TextAnalysisResult(AnalysisResult):
 class CompositeAnalysisResult(AnalysisResult):
     """ Composes and displays different analyses results as one result
     """
+
+    def export(self, path):
+        for _, result in self._analyses.items():
+            result.export(path)
 
     def __init__(self, **kwargs: AnalysisResult):
         """
@@ -55,6 +70,9 @@ class CompositeAnalysisResult(AnalysisResult):
 
 
 class DataFrameAnalysisResult(AnalysisResult):
+    def export(self, path):
+        self._dataframe.to_csv(path)
+
     def __init__(self, dataframe: pd.DataFrame):
         """
         :param dataframe: DataFrame to be displayed as analysis result
@@ -66,6 +84,9 @@ class DataFrameAnalysisResult(AnalysisResult):
 
 
 class FigureAnalysisResult(AnalysisResult):
+    def export(self, path):
+        pass
+
     def __init__(self, figure: Figure):
         """
         :param figure: Matplotlib's figure to be displayed as analysis result

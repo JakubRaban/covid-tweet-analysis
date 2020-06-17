@@ -1,6 +1,7 @@
 import abc
 import base64
 from io import BytesIO
+import os
 
 import flask
 import pandas as pd
@@ -28,7 +29,7 @@ class AnalysisResult(abc.ABC):
 
 class TextAnalysisResult(AnalysisResult):
     def export(self, path):
-        with open(path) as result_file:
+        with open(path, 'w+') as result_file:
             result_file.write(self._text)
 
     def __init__(self, text: str):
@@ -46,8 +47,8 @@ class CompositeAnalysisResult(AnalysisResult):
     """
 
     def export(self, path):
-        for _, result in self._analyses.items():
-            result.export(path)
+        for key in self._analyses.keys():
+            self._analyses[key].export(path + key.replace(' ', '_'))
 
     def __init__(self, **kwargs: AnalysisResult):
         """

@@ -42,7 +42,7 @@ class TweetSource:
             if group_name == 'test1':
                 continue
             description = "Brak opisu"
-            usernames = list(set(tweet['user']['name'] for tweet in self._db[group_name].find()))
+            usernames = list(sorted(set(tweet['user']['name'] for tweet in self._db[group_name].find())))
             yield UserGroup(group_name, usernames, description)
 
     def get_tweets(self, collections: Iterable[str], filter_params: Optional[dict] = None) -> Tweets:

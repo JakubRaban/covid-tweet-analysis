@@ -29,7 +29,7 @@ class TweetsPerDayTrend(Analysis):
 
         trend = model.predict
 
-        fig = plt.figure()
+        fig = plt.figure(figsize=(20, 9))
         plt.scatter(tweets_per_day.index, tweets_per_day[['text']], color="red")
         plt.xticks(rotation=90)
         plt.plot(tweets_per_day[['index']], trend(x_poly))

@@ -20,7 +20,7 @@ class FollowersTrend(Analysis):
         created_at = [x for x in followers["created_at"]]
         user_followers_count = [x for x in followers['user_followers_count']]
 
-        fig = plt.figure()
+        fig = plt.figure(figsize=(20, 9))
         plt.scatter(created_at, user_followers_count, color="red")
         plt.xlabel('day')
         plt.xticks(rotation=90)
